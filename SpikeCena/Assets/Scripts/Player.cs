@@ -43,7 +43,7 @@ public class Player : MonoBehaviour {
             if (currentBullet == 3) {
                 currentBullet = 0;
             } else {
-                currentBullet++; //changed for TortoiseSVN testing (was currentBullet++;) Looks Good! (Added in merge) - CHANGED BACK test
+                currentBullet++;
                 
             }
         }
