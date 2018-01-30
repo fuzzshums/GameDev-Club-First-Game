@@ -9,7 +9,6 @@ public class Player : MonoBehaviour {
     public float movementSpeed;
     int currentBullet;
 
-    //Use this for init! - Test conflict
     void Start () {
         playerPosition = this.transform.position;
         int currentBullet = 0;
