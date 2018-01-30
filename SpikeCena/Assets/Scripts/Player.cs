@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Collections; //TEST BABY
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +9,7 @@ public class Player : MonoBehaviour {
     public float movementSpeed;
     int currentBullet;
 
-    // Use this for initialization
+    // Use this for initialization  //test
     void Start () {
         playerPosition = this.transform.position;
         int currentBullet = 0;
