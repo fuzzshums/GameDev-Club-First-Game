@@ -9,7 +9,7 @@ public class Player : MonoBehaviour {
     public float movementSpeed;
     int currentBullet;
 
-    // Use this for initialization
+    // Use this for initialization Im going to add this line!
     void Start () {
         playerPosition = this.transform.position;
         int currentBullet = 0;
