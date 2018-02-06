@@ -1,4 +1,4 @@
-﻿using System.Collections; //TEST BABY
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
