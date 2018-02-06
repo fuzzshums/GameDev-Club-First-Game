@@ -14,7 +14,7 @@ public class Player : MonoBehaviour {
         int currentBullet = 0;
 	}
 	
-	// Update is called once per frame yes
+	// Update is called once per frame yes test change code!
 	void Update () {
         checkInput();
     }
