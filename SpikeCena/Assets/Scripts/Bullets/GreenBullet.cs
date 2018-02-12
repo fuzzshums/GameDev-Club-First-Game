@@ -27,7 +27,7 @@ public class GreenBullet : Bullet
         }
         else if(!activateSpin)
         {
-            float step = 6;
+            float step = 4;
             pos.y += step * (1 * Time.deltaTime);
             this.transform.position = pos;
             if (this.transform.position.y > 1)
@@ -41,9 +41,8 @@ public class GreenBullet : Bullet
     {
         timeCounter += Time.deltaTime;
         circleSize += Time.deltaTime;
-        float x = ((Mathf.Cos(timeCounter * 2)) * circleSize) + initialPos.x
-            ;
-        float y = ((Mathf.Sin(timeCounter * 2)) * circleSize);
+        float x = ((Mathf.Cos(timeCounter * 2)) * circleSize) + initialPos.x - (circleSize);
+        float y = ((Mathf.Sin(timeCounter * 2)) * circleSize );
         this.transform.position = new Vector2(x, y);
         
         if (this.transform.position.y > 6)
