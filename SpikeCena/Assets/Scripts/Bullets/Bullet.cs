@@ -58,4 +58,13 @@ public class Bullet : MonoBehaviour {
         fireRequest = false;
         this.transform.position = inactivePos;
     }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Spike"))
+        {
+            resetPos();
+        }
+    }
 }
+

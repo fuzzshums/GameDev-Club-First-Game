@@ -4,7 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - spike
+  - Bullet
+  - Spike
   layers:
   - Default
   - TransparentFX
