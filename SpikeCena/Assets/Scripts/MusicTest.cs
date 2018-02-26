@@ -19,6 +19,7 @@ public class MusicTest : MonoBehaviour {
     public float value;
     public float bandLerpRate;
     public float bandLerpCap;
+    public float scaleThreshold;
 
     int number = 1024; //TODO check on breaking down into fewer components + damping
     float reverseScale;
@@ -196,13 +197,12 @@ public class MusicTest : MonoBehaviour {
                     {
                         if (oldSamples[i] <= 0) //maybe hasn't been init yet!
                         {
-                            oldSamples[i] = dampeningLerpRate / 4;// / 8; //.01f;
+                            oldSamples[i] = .01f;// / 8; //.01f;
                         }
                         else
                         {
                             oldSamples[i] *= ((1.25f /* + lerpRate*/) + Time.deltaTime); //TODO cap this too? NOTE: ## lerping here
                         }
-                        //oldSamples[i] *= ((1.25f /* + lerpRate*/) + Time.deltaTime); //TODO cap this too? NOTE: ## lerping here
                         float xScale = startScale.x;
                         float yScale = startScale.y - oldSamples[i]; //-  a growing scalar
                         Vector2 vector = new Vector2(xScale, yScale);
@@ -213,6 +213,11 @@ public class MusicTest : MonoBehaviour {
                     else
                     {
                         oldSamples[i] = .01f; // dampeningLerpRate / 4;// / 8; //.01f;
+                        //@@@@@@SCALING BARS DOWN
+                        if (samples[i] > scaleThreshold)
+                        {
+                            //samples[i] /= 4;
+                        }
                         Vector2 endScale = new Vector2(xScale, ((samples[i] / 1.0f) * _VO_maxScale) + 1); //TODO scale down 
                         _sampleCube[i].transform.localScale = Vector2.Lerp(startScale, endScale, lerpRate);
                         _antisampleCube[i].transform.localScale = Vector2.Lerp(startScale, endScale, lerpRate);
