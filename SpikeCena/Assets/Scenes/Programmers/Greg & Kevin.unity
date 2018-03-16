@@ -77,18 +77,15 @@ LightmapSettings:
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 500
     m_PVRBounces: 2
-    m_PVRFilterTypeDirect: 0
-    m_PVRFilterTypeIndirect: 0
-    m_PVRFilterTypeAO: 0
+    m_PVRFiltering: 0
     m_PVRFilteringMode: 1
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
     m_PVRFilteringGaussRadiusAO: 2
-    m_PVRFilteringAtrousPositionSigmaDirect: 0.5
-    m_PVRFilteringAtrousPositionSigmaIndirect: 2
-    m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
+    m_PVRFilteringAtrousColorSigma: 1
+    m_PVRFilteringAtrousNormalSigma: 1
+    m_PVRFilteringAtrousPositionSigma: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -110,8 +107,6 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
-    debug:
-      m_Flags: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &332664289
 GameObject:
@@ -305,6 +300,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1045727938}
+  - component: {fileID: 1045727939}
   m_Layer: 0
   m_Name: Spike Spawn
   m_TagString: Untagged
@@ -325,6 +321,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1045727939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1045727937}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f85c4b5c363597f468621d2a4818adf9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultGO: {fileID: 1841667163849102, guid: da08e2eb322ea464ba071cb663bea460, type: 2}
+  max: 20
+  interval: 0
+  spawnInterval: 0.2
+  repeating: 1
+  duration: 10
 --- !u!1 &1112802656
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,11 +544,11 @@ Camera:
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+  m_StereoMirrorMode: 0
 --- !u!4 &1491458068
 Transform:
   m_ObjectHideFlags: 0
@@ -762,6 +775,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 114326556085254532, guid: 6c58c935ba0ce2d48a747a3ff232b4da,
+        type: 2}
+      propertyPath: health
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c58c935ba0ce2d48a747a3ff232b4da, type: 2}
   m_IsPrefabParent: 0
@@ -802,11 +820,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1820177323}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f0fbe27be1ed38459059c4bc47867ce, type: 3}
+  m_Script: {fileID: 11500000, guid: e03e52a368e52764daf30348bb259034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   defaultGO: {fileID: 1841667163849102, guid: da08e2eb322ea464ba071cb663bea460, type: 2}
-  max: 100
+  max: 10
   interval: 0
 --- !u!1001 &1878951586
 Prefab:

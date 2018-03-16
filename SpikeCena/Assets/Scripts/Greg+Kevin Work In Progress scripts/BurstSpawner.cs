@@ -15,15 +15,15 @@ using System.Collections.Generic;
 */
 public class BurstSpawner : Spawner
 {
-    private bool allDisabled;
+    protected bool allDisabled;
 
     void Start()
     {
-        Inititate();
+        Initiate();
         StartCoroutine(MyUpdate(transform.position));
     }
 
-    protected void Inititate()
+    protected override void Initiate()
     {
         base.Initiate();
 

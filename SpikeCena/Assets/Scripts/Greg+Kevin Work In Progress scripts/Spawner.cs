@@ -24,7 +24,7 @@ public abstract class Spawner: MonoBehaviour
     public static List<string> tags;
 
     //initiates static, protected, and private vars
-    protected void Initiate()
+    protected virtual void Initiate()
     {
         if(initiated == false)
         {

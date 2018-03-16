@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    public GameObject objectManager;
-    Vector2 playerPosition;
+    //public GameObject objectManager;
+    public int health;
     public float movementSpeed;
-    int currentBullet;
+
+    //private vars
+    private Vector2 playerPosition;
+    private int currentBullet;
+    private float flinchTime = 0.1f;     //time player color changes for when hit
+    private Color damagedColor = Color.red;
+    private Color regColor;
 
     void Start () {
         playerPosition = this.transform.position;
-        int currentBullet = 0;
+        //int currentBullet = 0;
+        regColor = GetComponent<SpriteRenderer>().color;
 	}
 	
 	// Update is called once per frame yes test change code!
@@ -35,7 +42,7 @@ public class Player : MonoBehaviour {
         }
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown("space"))
         {
-            objectManager.GetComponent<ObjectManager>().fireFreeBullet(currentBullet);
+            //objectManager.GetComponent<ObjectManager>().fireFreeBullet(currentBullet);
         }
         if (Input.GetMouseButtonDown(1))
         {
@@ -45,6 +52,36 @@ public class Player : MonoBehaviour {
                 currentBullet++; //changed for TortoiseSVN testing (was currentBullet++;) Looks Good! (Added in merge) - CHANGED BACK test
                 
             }
+        }
+    }
+
+    private void Die()
+    {
+        //Do dying stuff
+        Debug.Log("You've died.");
+    }
+
+    //Shows visual indication that player is damaged for flinchTime seconds
+    IEnumerator OnDamage()
+    {
+        GetComponent<SpriteRenderer>().color = damagedColor;
+        yield return new WaitForSeconds(flinchTime);
+        GetComponent<SpriteRenderer>().color = regColor;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if(other.gameObject.tag == "spike")
+        {
+            Spike spikeBehavior = other.gameObject.GetComponent<Spike>();
+            health -= spikeBehavior.GetDamage();
+            Debug.Log("" + health);
+            if(health <= 0)
+            {
+                Die();
+            }
+            StartCoroutine(OnDamage());
+            other.gameObject.GetComponent<Spike>().Die();
         }
     }
 }
