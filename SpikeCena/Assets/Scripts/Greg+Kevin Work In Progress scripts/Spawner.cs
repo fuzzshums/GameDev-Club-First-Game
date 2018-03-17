@@ -18,13 +18,13 @@ public abstract class Spawner: MonoBehaviour
     //public variables
     public GameObject defaultGO;
     public int max;
-    public float interval;
+    public float spawnInterval;
 
     //public static variables
     public static List<string> tags;
 
     //initiates static, protected, and private vars
-    protected virtual void Initiate()
+    protected virtual  void Initiate()
     {
         if(initiated == false)
         {

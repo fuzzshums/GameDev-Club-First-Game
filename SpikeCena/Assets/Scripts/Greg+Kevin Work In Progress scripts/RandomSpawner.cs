@@ -4,11 +4,37 @@ using UnityEngine;
 
 public class RandomSpawner : BurstSpawner {
 
-    public float spawnInterval;
     public bool repeating;
     public float duration; //time in seconds
 
     private Stack<GameObject> disabledGO;
+
+    //Sets Burst Random Spawner
+    /// <summary>
+    /// Sets the random spawner to burst mode
+    /// </summary>
+    /// <param name="m">max number of spikes to spawn</param>
+    /// <param name="si">interval between spawns in seconds</param>
+    public RandomSpawner(int m, float si = 0.2f) : base(m, si)
+    {
+        spawnInterval = si;
+        repeating = false;
+        duration = 0f;
+    }
+
+    //Sets Continuous Random Spawner
+    /// <summary>
+    /// More options to set for Random Spawner
+    /// </summary>
+    /// <param name="m">max number of spikes to spawn</param>
+    /// <param name="r">does spawner repeat</param>
+    /// <param name="d">duration of spawn in seconds</param>
+    /// <param name="si">interval between spawns in seconds</param>
+    public RandomSpawner(int m, bool r, float d, float si = 0.2f) : base(m, si)
+    {
+        repeating = r;
+        duration = d;
+    }
 
     void Start()
     {
@@ -18,7 +44,6 @@ public class RandomSpawner : BurstSpawner {
         {
             StartCoroutine(MyUpdate(transform.position));
         }
-        //else create a random burst of spikes
         else
         {
             StartCoroutine(base.MyUpdate(transform.position));
@@ -73,17 +98,18 @@ public class RandomSpawner : BurstSpawner {
     public override IEnumerator MyUpdate(Vector3 spawnPos)
     {
         float timer = 0f;
-        //spawn while duration has not expired
+        //repeating spawn behavior
         while (timer < duration)
         {
             Spawn(spawnPos);
             timer = timer + Time.deltaTime + spawnInterval;
             yield return new WaitForSeconds(spawnInterval);
+
         }
         //wait until all spawned GO are disabled before disabling the spawner
         while (allDisabled == false)
         {
-            yield return null;
+            yield return new WaitForSeconds(0.2f);
         }
         gameObject.SetActive(false);
     }

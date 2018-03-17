@@ -15,10 +15,7 @@ public class SpawnManager : MonoBehaviour {
 
     private List<Vector3> spawnPos;      //list of spawn point positions
     //private Spawner spikeSpawner;
-    public List<Spawner> spawners;     //list of different types of spawners
-                                                //Note: A list of spawners might be excessive
-                                                //      One spawner may be enough to handle both 
-                                                //      the spikes and bullets
+    public List<GameObject> spawners;
 
     public static SpawnManager Instance;
 

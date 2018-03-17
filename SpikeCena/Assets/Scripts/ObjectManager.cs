@@ -10,6 +10,7 @@ public class ObjectManager : MonoBehaviour
     //These are lists the Unity user will fill with game objects
     public List<GameObject> spikeList;
     public List<GameObject> bulletList;
+    public List<GameObject> spawnerList;
 
     public int numSpikes;
     public int numBullets;
@@ -26,16 +27,21 @@ public class ObjectManager : MonoBehaviour
     public Text timeText;
     float time = 0;
 
+    //Spawn manager
+    public static SpawnManager spawnManager; 
+
     // Use this for initialization
     void Start()
     {
-        whiteSpikeList = new List<GameObject>();
+        spawnManager = GetComponent<SpawnManager>();
+        spawnManager.spawners = createSpawners();
+        //whiteSpikeList = new List<GameObject>();
 
         whiteBulletList = new List<GameObject>();
         yellowBulletList = new List<GameObject>();
         blueBulletList = new List<GameObject>();
         greenBulletList = new List<GameObject>();
-        spawnSpikes();
+        StartCoroutine(spawnSpikes());
         spawnBullets();
         timeText.text = "Seconds Alive: " + ((int)Time.deltaTime);
     }
@@ -43,10 +49,22 @@ public class ObjectManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        clearOldObjects();
+        //clearOldObjects();
         time = time + Time.deltaTime;
         timeText.text = "Seconds Alive: " + ((int)time).ToString();
         Time.timeScale = timeScale;
+    }
+
+    private List<GameObject> createSpawners()
+    {
+        //sample spawners. In the future programically add spawners based on music
+        List<GameObject> spawners = new List<GameObject>();
+        for(int i = 0; i < spawnerList.Count; i++)
+        {
+            spawners.Add(spawnerList[i]);
+            spawners.Add(spawnerList[i]);
+        }
+        return spawners;
     }
 
     void clearOldObjects()
@@ -64,8 +82,17 @@ public class ObjectManager : MonoBehaviour
 
     //SPIKES
     #region
-    void spawnSpikes()
+    IEnumerator spawnSpikes()
     {
+        List<GameObject> spawners = spawnManager.spawners;
+        int numSpawners = spawners.Count;
+        int counter = 0;
+        while (counter < numSpawners) {
+            GameObject copy = Instantiate(spawners[counter], spawnManager.transform.position, Quaternion.identity, spawnManager.transform);
+            yield return StartCoroutine(copy.GetComponent<Spawner>().MyUpdate(copy.transform.position));
+            counter++;
+        }
+        /*
         for (int i = 0; i < spikeList.Count; i++)
         {
             for (int j = 0; j < numSpikes; j++)
@@ -74,6 +101,7 @@ public class ObjectManager : MonoBehaviour
                 whiteSpikeList.Add(spike); //TODO change when adding more spike types
             }
         }
+        */
 
     }
     void randomizeSpawn(GameObject spike)

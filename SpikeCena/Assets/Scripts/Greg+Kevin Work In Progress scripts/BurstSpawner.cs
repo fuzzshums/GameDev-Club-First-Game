@@ -17,6 +17,12 @@ public class BurstSpawner : Spawner
 {
     protected bool allDisabled;
 
+    public BurstSpawner(int m_max, float si = 0.2f)
+    {
+        max = m_max;
+        spawnInterval = si;
+    }
+
     void Start()
     {
         Initiate();
@@ -63,14 +69,12 @@ public class BurstSpawner : Spawner
         while (spawned.Count < max)
         {
             Spawn(spawnPos);
-            //yield return new WaitForSeconds(interval);
-            yield return null;
+            yield return new WaitForSeconds(spawnInterval);
         }
         //wait until all spawned GO are disabled before disabling the spawner
-        while (spawned.Count == max && allDisabled == false)
+        while (allDisabled == false)
         {
-            yield return null;
-            //yield return new WaitForSeconds(interval);
+            yield return new WaitForSeconds(0.2f);
         }
         gameObject.SetActive(false);
     }
