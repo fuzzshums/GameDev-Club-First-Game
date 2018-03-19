@@ -118,6 +118,21 @@ GameObject:
   m_PrefabParentObject: {fileID: 1606713909617590, guid: 42c55b41f6adaee47af04ef769d4de2e,
     type: 2}
   m_PrefabInternal: {fileID: 675424218}
+--- !u!114 &306272547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 306272546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f82ac1c8aea7a842b0caeff73a53315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spikes: []
+  bullets: []
+  spawnPoints: []
+  spawners: []
 --- !u!1001 &675424218
 Prefab:
   m_ObjectHideFlags: 0
@@ -134,6 +149,11 @@ Prefab:
         type: 2}
       propertyPath: bulletList.Array.size
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114902913620637204, guid: 42c55b41f6adaee47af04ef769d4de2e,
+        type: 2}
+      propertyPath: spawnerList.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4795620084815544, guid: 42c55b41f6adaee47af04ef769d4de2e, type: 2}
       propertyPath: m_LocalPosition.x
@@ -196,6 +216,18 @@ Prefab:
       propertyPath: spikeList.Array.data[0]
       value: 
       objectReference: {fileID: 1220939429409694, guid: af8e317686dff7046b5902f350da62a6,
+        type: 2}
+    - target: {fileID: 114902913620637204, guid: 42c55b41f6adaee47af04ef769d4de2e,
+        type: 2}
+      propertyPath: spawnerList.Array.data[0]
+      value: 
+      objectReference: {fileID: 1002595027893464, guid: 035cdf81634178240a05c1c30f360b19,
+        type: 2}
+    - target: {fileID: 114902913620637204, guid: 42c55b41f6adaee47af04ef769d4de2e,
+        type: 2}
+      propertyPath: spawnerList.Array.data[1]
+      value: 
+      objectReference: {fileID: 1968451618191324, guid: 744d45adbc897ea47ab80758f68522a4,
         type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 42c55b41f6adaee47af04ef769d4de2e, type: 2}
@@ -377,7 +409,7 @@ Prefab:
       objectReference: {fileID: 306272546}
     - target: {fileID: 1017563398667598, guid: 6c58c935ba0ce2d48a747a3ff232b4da, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c58c935ba0ce2d48a747a3ff232b4da, type: 2}

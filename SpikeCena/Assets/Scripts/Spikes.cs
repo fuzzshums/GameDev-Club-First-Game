@@ -19,6 +19,12 @@ public class Spikes : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         // just some random stuff to demonstrate movement
+        Vector2 currentpos = this.transform.position;
+        Vector2 newPos = currentpos;
+        newPos.y -= 50*Time.deltaTime;
+        this.transform.position = Vector2.Lerp(currentpos, newPos, .1f);
+
+        /*
         if (color == 'w')
         {
             yspeed = Time.timeSinceLevelLoad * -.3f;
@@ -28,6 +34,7 @@ public class Spikes : MonoBehaviour {
         pointing = new Vector3(0, 0, (Mathf.Atan2(yspeed, xspeed) * Mathf.Rad2Deg) - 90);
         transform.eulerAngles = pointing;
         transform.Translate(xspeed * Time.deltaTime, yspeed * Time.deltaTime, 0, Space.World);
+        */
 	}
 
     void OnTriggerEnter2D(Collider2D other)
