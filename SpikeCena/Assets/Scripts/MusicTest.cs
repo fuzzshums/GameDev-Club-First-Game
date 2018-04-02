@@ -39,6 +39,8 @@ public class MusicTest : MonoBehaviour {
     public float _VO_maxScale;
     public float _baseScale;
     public float _sumScale;
+    public bool useTemp;
+    public float VO_tempScale;
     public float mRed, mGreen, mBlue = 0f;
     public float m2Red, m2Green, m2Blue = 0f;
 
@@ -135,8 +137,16 @@ public class MusicTest : MonoBehaviour {
                 pausePoint += sliceLength;
             }
         }
-
-        _VO_maxScale = _baseScale + _sumScale * sum;
+        VO_tempScale = _sumScale;
+        VO_tempScale = _sumScale / (1 + sum*8);
+        if (useTemp)
+        {
+            _VO_maxScale = _baseScale + VO_tempScale * sum;
+        }
+        else
+        {
+            _VO_maxScale = _baseScale + _sumScale * sum;
+        }
         //_VO_maxScale = 2000 + sum*500;
         
         //How fast to lerp between points?
