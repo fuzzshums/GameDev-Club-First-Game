@@ -24,7 +24,6 @@ public class Bullet : MonoBehaviour {
     // Update is called once per frame
     public void Update () {
        checkFireRequest();
-
        if (firing) {
            fireBulletUpdate();
         }
@@ -63,6 +62,7 @@ public class Bullet : MonoBehaviour {
     {
         if (other.gameObject.CompareTag("Spike"))
         {
+            other.GetComponent<SpikeWhite>().resetPos();
             resetPos();
         }
     }

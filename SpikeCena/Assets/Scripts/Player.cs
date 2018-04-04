@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    //public GameObject objectManager;
+    public GameObject objectManager;
     public int health;
     public float movementSpeed;
 
@@ -42,7 +42,7 @@ public class Player : MonoBehaviour {
         }
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown("space"))
         {
-            //objectManager.GetComponent<ObjectManager>().fireFreeBullet(currentBullet);
+            objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(currentBullet);
         }
         if (Input.GetMouseButtonDown(1))
         {

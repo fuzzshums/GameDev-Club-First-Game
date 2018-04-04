@@ -46,6 +46,9 @@ public class MusicTest : MonoBehaviour {
 
     GameObject bg;
     // Use this for initialization
+
+
+
     void Start () {
         reverseScale = number / 256;
         xScale /= reverseScale;
@@ -105,7 +108,7 @@ public class MusicTest : MonoBehaviour {
         AudioListener.GetSpectrumData(samples, 0, fftWindow);
 
         sum = 0;
-        float mostImportant = 128;
+        float mostImportant = number; //NOTE: OLD WAS 128
         for (int i = 0; i < mostImportant; i++)
         {
             sum += samples[i]/2;
@@ -148,10 +151,11 @@ public class MusicTest : MonoBehaviour {
             _VO_maxScale = _baseScale + _sumScale * sum;
         }
         //_VO_maxScale = 2000 + sum*500;
-        
+
         //How fast to lerp between points?
-        lerpRate = .3f / (sum*8);
-        float dampeningLerpRate = .3f / (sum*8);
+        float march4change = 10;
+        lerpRate = .3f / (sum*march4change);
+        float dampeningLerpRate = .3f / (sum*march4change);
         if (dampening == false)
         {
             if (lerpRate > lerpCap)
@@ -326,7 +330,7 @@ public class MusicTest : MonoBehaviour {
 	}
 
     
-void clearBands()
+    void clearBands()
     {
         for (int i = 0; i < _bands.Length; i++)
         {
@@ -334,7 +338,7 @@ void clearBands()
         }
     }
 
-void changeBackgroundColor(float value)
+    void changeBackgroundColor(float value)
     {
         Color oldC = Camera.main.backgroundColor;
         Color newC;
@@ -350,4 +354,11 @@ void changeBackgroundColor(float value)
         Color currentColour = Color.Lerp(oldC, newC, 0.025f);
         Camera.main.backgroundColor = currentColour;
     }
+
+    public float getIntensity()
+    {
+        return sum;
+    }
 }
+
+
