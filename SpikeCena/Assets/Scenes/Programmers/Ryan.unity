@@ -435,7 +435,7 @@ Prefab:
         type: 2}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: cdd85c522daa7a14fb1899d62b2e19b3, type: 3}
+      objectReference: {fileID: 8300000, guid: 2c8de849bfeddb24f827da372fd1653e, type: 3}
     - target: {fileID: 114025280872696348, guid: 5a91c93594e030245b8a62e1095f9fc6,
         type: 2}
       propertyPath: useTemp
@@ -445,6 +445,11 @@ Prefab:
         type: 2}
       propertyPath: _baseScale
       value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114025280872696348, guid: 5a91c93594e030245b8a62e1095f9fc6,
+        type: 2}
+      propertyPath: lerpCap
+      value: 0.4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5a91c93594e030245b8a62e1095f9fc6, type: 2}
