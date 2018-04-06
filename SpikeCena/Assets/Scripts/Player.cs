@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     public GameObject objectManager;
+    GameObject myMasterMind;
     public int health;
     public float movementSpeed;
 
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour {
     private Color regColor;
 
     void Start () {
+        myMasterMind = GameObject.Find("Master Mind");
         playerPosition = this.transform.position;
         //int currentBullet = 0;
         regColor = GetComponent<SpriteRenderer>().color;
@@ -23,6 +25,15 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame yes test change code!
 	void Update () {
+        movementSpeed = myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate();
+        if (movementSpeed > myMasterMind.GetComponent<MasterMind>().playerRateCap) //TODO remove these out of update place at top -UNLESS WE WANT TO DYNAMIC UPDATE
+        {
+            movementSpeed = myMasterMind.GetComponent<MasterMind>().playerRateCap;
+        }
+        if (movementSpeed < .5f)
+        {
+            movementSpeed = .5f;
+        }
         checkInput();
     }
 

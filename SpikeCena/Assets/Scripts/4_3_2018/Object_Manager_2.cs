@@ -97,18 +97,34 @@ public class Object_Manager_2 : MonoBehaviour
     {
         for (int j = 0; j < numBullets; j++)
         {
-            GameObject whiteBullet = Instantiate(bulletList[0]);
-            whiteBulletList.Add(whiteBullet);
-            GameObject yellowBullet = Instantiate(bulletList[1]);
-            yellowBulletList.Add(yellowBullet);
-            GameObject blueBullet0 = Instantiate(bulletList[2]);
-            GameObject blueBullet1 = Instantiate(bulletList[2]);
-            GameObject blueBullet2 = Instantiate(bulletList[2]);
-            blueBulletList.Add(blueBullet0);
-            blueBulletList.Add(blueBullet1);
-            blueBulletList.Add(blueBullet2);
-            GameObject greenBullet = Instantiate(bulletList[3]);
-            greenBulletList.Add(greenBullet);
+            for (int i = 0; i < bulletList.Count; i++)
+            {
+                if (i == 0)
+                {
+                    GameObject whiteBullet = Instantiate(bulletList[0]);
+                    whiteBulletList.Add(whiteBullet);
+                }
+                else if (i == 1)
+                {
+                    GameObject yellowBullet = Instantiate(bulletList[1]);
+                    yellowBulletList.Add(yellowBullet);
+                }
+                else if (i == 2)
+                {
+                    GameObject blueBullet0 = Instantiate(bulletList[2]);
+                    GameObject blueBullet1 = Instantiate(bulletList[2]);
+                    GameObject blueBullet2 = Instantiate(bulletList[2]);
+                    blueBulletList.Add(blueBullet0);
+                    blueBulletList.Add(blueBullet1);
+                    blueBulletList.Add(blueBullet2);
+                }
+                else if (i == 3)
+                {
+                    GameObject greenBullet = Instantiate(bulletList[3]);
+                    greenBulletList.Add(greenBullet);
+                }
+            }
+
         }
     }
 

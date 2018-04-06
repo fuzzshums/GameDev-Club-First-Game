@@ -10,10 +10,12 @@ public class Bullet : MonoBehaviour {
     public bool firing;
     public bool fireRequest;
     public GameObject myPlayer;
+    GameObject myMasterMind;
 
 
     // Use this for initialization
     public void Start () {
+        myMasterMind = GameObject.Find("Master Mind");
         firing = false;
         fireRequest = false;
         inactivePos = new Vector2(-10, -10);
@@ -43,7 +45,8 @@ public class Bullet : MonoBehaviour {
     public void fireBulletUpdate()
     {
         float step = 6;
-        pos.y += step * (1 * Time.deltaTime);
+        step = myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate();
+        pos.y += step * (Time.deltaTime);
         this.transform.position = pos;
         if (this.transform.position.y > 6)
         {

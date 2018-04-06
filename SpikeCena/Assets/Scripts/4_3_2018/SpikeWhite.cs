@@ -5,66 +5,27 @@ using UnityEngine;
 public class SpikeWhite : MonoBehaviour {
 
     public float rate;
-    GameObject myMusicManager;
+    GameObject myMasterMind;
 
     private float rateCap;
     // Use this for initialization
     void Start () {
         rate = 3;
-        rateCap = 14f;
-        myMusicManager = GameObject.Find("Music Master");
+        rateCap = 10f;
+        myMasterMind = GameObject.Find("Master Mind");
     }
 	
 	// Update is called once per frame
 	void Update () {
-        float oldRate = rate;
-        float newRate = .5f + 7f*myMusicManager.GetComponent<MusicTest>().getIntensity();
-        if (newRate > rateCap)
+        rate = myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate();
+        if (rate > myMasterMind.GetComponent<MasterMind>().rateCap) //TODO remove these out of update place at top -UNLESS WE WANT TO DYNAMIC UPDATE
         {
-            newRate = rateCap;
-        }
-        if (newRate * 4f < oldRate && newRate * 6f >= oldRate)
-        {
-            Debug.Log("mid slowing");
-            rate = Mathf.Lerp(oldRate, newRate, .2f);
-
-        }
-        else if (newRate * 6f < oldRate)
-        {
-            Debug.Log("GOD slowing");
-            rate = Mathf.Lerp(oldRate, newRate, 1f);
-
-        }
-        else if (newRate < oldRate)
-        {
-            //Dampen the speed decrease!
-            rate = oldRate - .25f * Time.deltaTime;
-        }
-        /*
-        else if (newRate < oldRate * 2 && newRate >= oldRate * 4)
-        {
-            //Super Dampen the speed decrease!
-            rate = oldRate - 2f * Time.deltaTime;
-        }
-        else if (newRate < oldRate * 4 && newRate >= oldRate * 8)
-        {
-            //HECKA Dampen the speed decrease!
-            rate = oldRate - 4f * Time.deltaTime;
-        }
-        */
-        else //if its super LOW or greater than -> just lerp it
-        {
-            rate = Mathf.Lerp(oldRate, newRate, .5f);
+            rate = myMasterMind.GetComponent<MasterMind>().rateCap;
         }
         if (rate < .5f)
         {
             rate = .5f;
         }
-        if (rate > rateCap)
-        {
-            rate = rateCap;
-        }
-        //rate = newRate;
         moveDown();
 	}
 
@@ -82,4 +43,5 @@ public class SpikeWhite : MonoBehaviour {
         Vector2 newPos = new Vector2(xPos, yPos);
         this.transform.position = newPos;
     }
+
 }
