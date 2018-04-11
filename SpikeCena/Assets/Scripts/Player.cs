@@ -80,10 +80,11 @@ public class Player : MonoBehaviour {
         GetComponent<SpriteRenderer>().color = regColor;
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.tag == "spike")
+        if (other.gameObject.tag == "Spike")
         {
+            /*
             Spike spikeBehavior = other.gameObject.GetComponent<Spike>();
             health -= spikeBehavior.GetDamage();
             Debug.Log("" + health);
@@ -93,6 +94,9 @@ public class Player : MonoBehaviour {
             }
             StartCoroutine(OnDamage());
             other.gameObject.GetComponent<Spike>().Die();
+            */
+            other.gameObject.GetComponent<SpikeWhite>().resetPos();
+            Die();
         }
     }
 }

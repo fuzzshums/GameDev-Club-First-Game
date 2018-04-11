@@ -58,7 +58,7 @@ public class Object_Manager_2 : MonoBehaviour
         //TODO spikes
         for (int i = 0; i < whiteSpikeList.Count; i++)
         {
-            if (whiteSpikeList[i].transform.position.y <= -4)
+            if (whiteSpikeList[i].transform.position.y <= -4.1)
             {
                 randomizeSpawn(whiteSpikeList[i]);
             }

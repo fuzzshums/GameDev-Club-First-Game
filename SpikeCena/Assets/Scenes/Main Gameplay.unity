@@ -432,7 +432,7 @@ Prefab:
         type: 2}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: ed18a109390318d4db7a72dae7fcfd08, type: 3}
+      objectReference: {fileID: 8300000, guid: b07dbe2f19f0e4f498d53608f26138c8, type: 3}
     - target: {fileID: 114025280872696348, guid: 5a91c93594e030245b8a62e1095f9fc6,
         type: 2}
       propertyPath: useTemp
@@ -640,7 +640,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4271824605798358, guid: 6c58c935ba0ce2d48a747a3ff232b4da, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0.11999
+      value: 0.17
       objectReference: {fileID: 0}
     - target: {fileID: 4271824605798358, guid: 6c58c935ba0ce2d48a747a3ff232b4da, type: 2}
       propertyPath: m_LocalPosition.z
@@ -671,42 +671,25 @@ Prefab:
       propertyPath: objectManager
       value: 
       objectReference: {fileID: 306272546}
-    - target: {fileID: 1017563398667598, guid: 6c58c935ba0ce2d48a747a3ff232b4da, type: 2}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114326556085254532, guid: 6c58c935ba0ce2d48a747a3ff232b4da,
-        type: 2}
-      propertyPath: movementSpeed
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 50898942103871488, guid: 6c58c935ba0ce2d48a747a3ff232b4da,
         type: 2}
       propertyPath: m_Mass
-      value: 1000000
+      value: 100000
       objectReference: {fileID: 0}
-    - target: {fileID: 4271824605798358, guid: 6c58c935ba0ce2d48a747a3ff232b4da, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 0.15
-      objectReference: {fileID: 0}
-    - target: {fileID: 212027919504972748, guid: 6c58c935ba0ce2d48a747a3ff232b4da,
+    - target: {fileID: 50898942103871488, guid: 6c58c935ba0ce2d48a747a3ff232b4da,
         type: 2}
-      propertyPath: m_Color.r
+      propertyPath: m_Simulated
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 212027919504972748, guid: 6c58c935ba0ce2d48a747a3ff232b4da,
+    - target: {fileID: 61861906428499714, guid: 6c58c935ba0ce2d48a747a3ff232b4da,
         type: 2}
-      propertyPath: m_Color.g
+      propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 212027919504972748, guid: 6c58c935ba0ce2d48a747a3ff232b4da,
+    - target: {fileID: 50898942103871488, guid: 6c58c935ba0ce2d48a747a3ff232b4da,
         type: 2}
-      propertyPath: m_Color.b
+      propertyPath: m_BodyType
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4271824605798358, guid: 6c58c935ba0ce2d48a747a3ff232b4da, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 0.3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c58c935ba0ce2d48a747a3ff232b4da, type: 2}

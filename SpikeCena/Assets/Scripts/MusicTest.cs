@@ -21,7 +21,8 @@ public class MusicTest : MonoBehaviour {
     public float bandLerpCap;
     public float scaleThreshold;
 
-    int number = 1024; //TODO check on breaking down into fewer components + damping
+    int number; //TODO check on breaking down into fewer components + damping
+    int numberDrawn;
     float reverseScale;
     float xScale = .07f;
     private float[] samples;
@@ -50,6 +51,8 @@ public class MusicTest : MonoBehaviour {
 
 
     void Start () {
+        number = 1024;
+        numberDrawn = number / 2;
         reverseScale = number / 256;
         xScale /= reverseScale;
         //xScale /= 2; //remove overlap
@@ -62,7 +65,7 @@ public class MusicTest : MonoBehaviour {
         //bg = Instantiate(backgroundPrefab);
 
 
-        for (int i = 0; i < number; i++)
+        for (int i = 0; i < numberDrawn; i++)
         {
             GameObject cube = (GameObject)Instantiate(objectPrefab);
             cube.transform.position = new Vector3(xScale*i - 8.88f, -4.8f, 1f);
@@ -108,7 +111,7 @@ public class MusicTest : MonoBehaviour {
         AudioListener.GetSpectrumData(samples, 0, fftWindow);
 
         sum = 0;
-        float mostImportant = number; //NOTE: OLD WAS 128
+        float mostImportant = numberDrawn; //NOTE: OLD WAS 128
         for (int i = 0; i < mostImportant; i++)
         {
             sum += samples[i]/2;
@@ -190,7 +193,7 @@ public class MusicTest : MonoBehaviour {
             value *= .7f;
         }
         changeBackgroundColor(value);
-        for (int i = 0; i < number; i++)
+        for (int i = 0; i < numberDrawn; i++)
         {
             if (_sampleCube != null)
             {
