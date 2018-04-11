@@ -7,6 +7,7 @@ public class Bullet : MonoBehaviour {
     public Vector2 inactivePos;
     public Vector2 initialPos;
     public Vector2 pos;
+    public Vector2 targetPos;
     public bool firing;
     public bool fireRequest;
     public GameObject myPlayer;
@@ -37,7 +38,9 @@ public class Bullet : MonoBehaviour {
         if (fireRequest && !firing) {
 
             initialPos = myPlayer.transform.position;
-            pos = initialPos;
+            //pos = initialPos;
+            //targetPos = Input.mousePosition;
+            this.transform.position = myPlayer.transform.position;
             firing = true;
         }
     }
@@ -45,9 +48,10 @@ public class Bullet : MonoBehaviour {
     public void fireBulletUpdate()
     {
         float step = 6;
-        step = myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate();
-        pos.y += step * (Time.deltaTime);
-        this.transform.position = pos;
+        step = myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate() * Time.deltaTime;
+        //pos.y += step;
+        //this.transform.position = pos;
+        this.transform.position = Vector2.MoveTowards(this.transform.position, targetPos, step);
         if (this.transform.position.y > 6)
         {
             resetPos();

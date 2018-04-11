@@ -51,9 +51,11 @@ public class Player : MonoBehaviour {
             playerPosition.x += movementSpeed * Time.deltaTime;
             this.transform.position = playerPosition;
         }
-        if (Input.GetMouseButtonDown(0) || Input.GetKeyDown("space"))
+        if (Input.GetMouseButtonDown(0)) //NOTE: removed space for hotkey max view window
         {
-            objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(currentBullet);
+            var targetPos = Input.mousePosition;
+            targetPos = Camera.main.ScreenToWorldPoint(targetPos);
+            objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(currentBullet, targetPos);
         }
         if (Input.GetMouseButtonDown(1))
         {

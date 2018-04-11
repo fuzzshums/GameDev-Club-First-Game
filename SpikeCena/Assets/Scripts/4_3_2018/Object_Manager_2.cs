@@ -128,7 +128,7 @@ public class Object_Manager_2 : MonoBehaviour
         }
     }
 
-    public void fireFreeBullet(int type)
+    public void fireFreeBullet(int type, Vector2 targetPos)
     {
         if (type == 1)
         {
@@ -173,6 +173,7 @@ public class Object_Manager_2 : MonoBehaviour
             {
                 if (whiteBulletList[i].GetComponent<Bullet>().fireRequest == false)
                 {
+                    whiteBulletList[i].GetComponent<Bullet>().targetPos = targetPos;
                     whiteBulletList[i].GetComponent<Bullet>().fireRequest = true;
                     return;
                 }

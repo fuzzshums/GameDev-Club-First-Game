@@ -234,8 +234,8 @@ MonoBehaviour:
   - {fileID: 1220939429409694, guid: df9623febab0f0441a4d55486321848b, type: 2}
   bulletList:
   - {fileID: 1957984687342010, guid: c82fc42e36e8cb540b5c2c2d3b280c45, type: 2}
-  numSpikes: 20
-  numBullets: 20
+  numSpikes: 100
+  numBullets: 50
   timeScale: 1
   timeText: {fileID: 667408176}
 --- !u!4 &306272548 stripped
@@ -432,7 +432,7 @@ Prefab:
         type: 2}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: b07dbe2f19f0e4f498d53608f26138c8, type: 3}
+      objectReference: {fileID: 8300000, guid: 056ec76942354154183e6ac35af2b4b4, type: 3}
     - target: {fileID: 114025280872696348, guid: 5a91c93594e030245b8a62e1095f9fc6,
         type: 2}
       propertyPath: useTemp
@@ -447,6 +447,11 @@ Prefab:
         type: 2}
       propertyPath: lerpCap
       value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 114025280872696348, guid: 5a91c93594e030245b8a62e1095f9fc6,
+        type: 2}
+      propertyPath: dampening
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114595091122867390, guid: 5a91c93594e030245b8a62e1095f9fc6, type: 2}
