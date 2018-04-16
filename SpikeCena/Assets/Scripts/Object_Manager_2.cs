@@ -6,12 +6,14 @@ using UnityEngine.UI;
 
 public class Object_Manager_2 : MonoBehaviour
 {
+    GameObject myMasterMind;
     public GameObject myPlayer;
     //These are lists the Unity user will fill with game objects
     public List<GameObject> spikeList;
     public List<GameObject> bulletList;
 
     public int numSpikes;
+    public int numActive;
     public int numBullets;
     public float timeScale;
 
@@ -32,6 +34,7 @@ public class Object_Manager_2 : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        myMasterMind = GameObject.Find("Master Mind");
         whiteSpikeList = new List<GameObject>();
 
         whiteBulletList = new List<GameObject>();
@@ -41,6 +44,9 @@ public class Object_Manager_2 : MonoBehaviour
         spawnSpikes();
         spawnBullets();
         timeText.text = "Seconds Alive: " + ((int)Time.deltaTime);
+
+        numSpikes = 0;
+        numActive = 0;
     }
 
     // Update is called once per frame
@@ -50,6 +56,7 @@ public class Object_Manager_2 : MonoBehaviour
         time = time + Time.deltaTime;
         timeText.text = "Seconds Alive: " + ((int)time).ToString();
         Time.timeScale = timeScale;
+        manageNumSpikes();
     }
 
     void clearOldObjects()
@@ -58,10 +65,44 @@ public class Object_Manager_2 : MonoBehaviour
         //TODO spikes
         for (int i = 0; i < whiteSpikeList.Count; i++)
         {
-            if (whiteSpikeList[i].transform.position.y <= -4.1)
+            /*
+            if (numActive < numSpikes)
             {
-                randomizeSpawn(whiteSpikeList[i]);
+                if (whiteSpikeList[i].activeSelf == false)
+                {
+                    whiteSpikeList[i].SetActive(true);
+                    whiteSpikeList[i].GetComponent<Renderer>().enabled = true;
+                    whiteSpikeList[i].GetComponent<SpikeWhite>().resetPos();
+                    numActive += 1;
+                }
             }
+            */
+
+            if (whiteSpikeList[i].transform.position.y <= -4.2f)
+            {
+                if (numActive > numSpikes && whiteSpikeList[i].activeSelf == true) //if we have too many AND you are active...
+                {
+                    whiteSpikeList[i].SetActive(false);
+                    whiteSpikeList[i].GetComponent<Renderer>().enabled = false;
+                    numActive -= 1;
+                }
+                else
+                {
+                    whiteSpikeList[i].GetComponent<SpikeWhite>().resetPos();
+                    //randomizeSpawn(whiteSpikeList[i]);
+                }
+            }
+            
+            else if (whiteSpikeList[i].transform.position.y >= 5.25) //can also deactviate when above screen!
+            {
+                if (numActive > numSpikes && whiteSpikeList[i].activeSelf == true)
+                {
+                    whiteSpikeList[i].SetActive(false);
+                    whiteSpikeList[i].GetComponent<Renderer>().enabled = false;
+                    numActive -= 1;
+                }
+            }
+            
         }
     }
 
@@ -76,19 +117,38 @@ public class Object_Manager_2 : MonoBehaviour
                 GameObject spike = Instantiate(spikeList[i]);
                 
                 float xPos = UnityEngine.Random.Range(-8.88f, 8.88f);
-                float yPos = UnityEngine.Random.Range(10f, 20f);
+                float yPos = UnityEngine.Random.Range(6f, 12f);
                 Vector2 startPos = new Vector2(xPos, yPos);
                 spike.transform.position = startPos;
+                spike.SetActive(false);
+                spike.GetComponent<Renderer>().enabled = false;
                 whiteSpikeList.Add(spike); //TODO change when adding more spike types
             }
         }
     }
-    void randomizeSpawn(GameObject spike)
+
+    void manageNumSpikes()
     {
-        float xPos = UnityEngine.Random.Range(-8.88f, 8.88f);
-        float yPos = UnityEngine.Random.Range(6f, 9f);
-        Vector2 newPos = new Vector2(xPos, yPos);
-        spike.transform.position = newPos;
+        numSpikes = myMasterMind.GetComponent<MasterMind>().getNumSpikes();
+        if (numActive < numSpikes)
+        {
+            for (int i = 0; i < whiteSpikeList.Count; i++)
+            {
+                if (numActive < numSpikes)
+                {
+                    if (whiteSpikeList[i].activeSelf == false)
+                    {
+                        whiteSpikeList[i].SetActive(true);
+                        whiteSpikeList[i].GetComponent<Renderer>().enabled = true;
+                        whiteSpikeList[i].GetComponent<SpikeWhite>().resetPos();
+                        numActive += 1;
+                    }
+                }
+
+            }
+        }
+
+        //Debug.Log(numSpikes);
     }
     #endregion
 

@@ -17,6 +17,13 @@ public class MasterMind : MonoBehaviour {
     //Use to modify params of other classes
     public float rateCap;
     public float playerRateCap;
+
+    float oldNumSpikes;
+    float newNumSpikes;
+    float numSpikeThreshold;
+    float timeWithinThreshold;
+    float timeCap;
+    float totalTime;
 	// Use this for initialization
 	void Start () {
         objectManager = GameObject.Find("Object Manager");
@@ -26,11 +33,16 @@ public class MasterMind : MonoBehaviour {
         //Variables
         rateCap = 12f;
         playerRateCap = 12f;
+
+        numSpikeThreshold = 1f;
+        timeWithinThreshold = 0;
+        timeCap = .1f;
+        totalTime = 0;
     }
 	
 	// Update is called once per frame
 	void Update () {
-		
+        totalTime += Time.deltaTime;
 	}
     //1.) @@@@@@   SPIKES   @@@@@@
     #region
@@ -65,6 +77,52 @@ public class MasterMind : MonoBehaviour {
             VO_rate = Mathf.Lerp(oldRate, newRate, .5f);
         }
         return VO_rate;
+    }
+    public int getNumSpikes()
+    {
+        float Scale = totalTime / 100;
+        if (Scale < 1)
+        {
+            Scale = 1;
+        }
+        else if (Scale > 2)
+        {
+            Scale = 2;
+        }
+        else
+        {
+            //Debug.Log(Scale);
+        }
+        newNumSpikes = .75f + Scale * 12f * musicManager.GetComponent<MusicTest>().getIntensity();
+
+
+        if (Mathf.Abs(newNumSpikes - oldNumSpikes) > numSpikeThreshold && timeWithinThreshold > timeCap)
+        {
+            timeWithinThreshold = 0;
+            if (newNumSpikes > oldNumSpikes + 2)
+            {
+                oldNumSpikes += 2; //don't give away all our spikes at once!
+                return (int)oldNumSpikes;
+            }
+
+            if (newNumSpikes + 2 < oldNumSpikes)
+            {
+                oldNumSpikes -= 2;
+                return (int)oldNumSpikes;
+            }
+            else if (newNumSpikes < oldNumSpikes)
+            {
+                oldNumSpikes -= 1;
+                return (int) oldNumSpikes;
+            }
+        }
+        else
+        {
+            timeWithinThreshold += Time.deltaTime;
+            newNumSpikes = oldNumSpikes;
+        }
+        oldNumSpikes = newNumSpikes;
+        return (int) newNumSpikes;
     }
     #endregion
     //2.) @@@@@@   PLAYER   @@@@@@

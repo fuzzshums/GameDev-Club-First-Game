@@ -18,7 +18,7 @@ public class MusicTest : MonoBehaviour {
     public float colorScale;
     public float value;
     public float scaleThreshold;
-
+    public float VO_constant;
     int number; //TODO check on breaking down into fewer components + damping
     int numberDrawn;
     float reverseScale;
@@ -76,10 +76,15 @@ public class MusicTest : MonoBehaviour {
         AudioListener.GetSpectrumData(samples, 0, fftWindow);
 
         sum = 0;
+        float midSection = 0;
         float mostImportant = numberDrawn; //NOTE: OLD WAS 128
         for (int i = 0; i < mostImportant; i++)
         {
             sum += samples[i]/2;
+            if (i > 32)
+            {
+                midSection += samples[i]*4;
+            }
         }
 
         VO_tempScale = _sumScale;
@@ -156,7 +161,17 @@ public class MusicTest : MonoBehaviour {
                         }
                         else
                         {
-                            oldSamples[i] *= ((1.25f /* + lerpRate*/) + Time.deltaTime); //TODO cap this too? NOTE: ## lerping here
+                            VO_constant = 1; // 1.25f;
+                            //float speedModification = (midSection / (midSection + 1));
+                            float speedModification = (sum / (sum + 1));
+                            speedModification /= 4; //at max can be .25
+                            if (speedModification > .25f)
+                            {
+                                speedModification = .25f;
+                            }
+                            VO_constant += speedModification;
+                            //VO_constant = 1.25f; //TODO make a function similar to check if variance enough / enough time to change!
+                            oldSamples[i] *= ((VO_constant /* + lerpRate*/) + Time.deltaTime); //TODO cap this too? NOTE: ## lerping here
                         }
                         float xScale = startScale.x;
                         float yScale = startScale.y - oldSamples[i]; //-  a growing scalar

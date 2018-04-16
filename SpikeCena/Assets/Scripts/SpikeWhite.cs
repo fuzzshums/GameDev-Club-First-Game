@@ -39,7 +39,7 @@ public class SpikeWhite : MonoBehaviour {
     public void resetPos()
     {
         float xPos = UnityEngine.Random.Range(-8.88f, 8.88f);
-        float yPos = UnityEngine.Random.Range(6f, 9f);
+        float yPos = UnityEngine.Random.Range(5.25f, 7f);
         Vector2 newPos = new Vector2(xPos, yPos);
         this.transform.position = newPos;
     }
