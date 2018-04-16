@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 //This class will manage all of the variables of everything else.
 //It will have getters that every other class can call to find out info.
@@ -24,8 +24,15 @@ public class MasterMind : MonoBehaviour {
     float timeWithinThreshold;
     float timeCap;
     float totalTime;
-	// Use this for initialization
-	void Start () {
+
+    //UI
+    public Text timeText;
+    float time = 0;
+    public Text scoreText;
+    float score = 0;
+
+    // Use this for initialization
+    void Start () {
         objectManager = GameObject.Find("Object Manager");
 		musicManager = GameObject.Find("Music Master");
         player = GameObject.Find("Player");
@@ -38,12 +45,19 @@ public class MasterMind : MonoBehaviour {
         timeWithinThreshold = 0;
         timeCap = .1f;
         totalTime = 0;
+
+        timeText.text = "Seconds Alive: " + ((int)Time.deltaTime);
+        scoreText.text = "Score: " + 0;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
         totalTime += Time.deltaTime;
-	}
+
+        time = time + Time.deltaTime;
+        timeText.text = "Seconds Alive: " + ((int)time).ToString();
+        scoreText.text = "Score: " + (score + ((int)time)).ToString();
+    }
     //1.) @@@@@@   SPIKES   @@@@@@
     #region
     public float getWhiteMovementRate()
@@ -128,4 +142,12 @@ public class MasterMind : MonoBehaviour {
     //2.) @@@@@@   PLAYER   @@@@@@
     #region
     #endregion
+    //3.) @@@@@@     UI     @@@@@@
+    #region
+    public void increaseScore(int n)
+    {
+        score += n;
+    }
+    #endregion
+
 }

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEngine.UI;
 
 public class Object_Manager_2 : MonoBehaviour
 {
@@ -15,7 +14,6 @@ public class Object_Manager_2 : MonoBehaviour
     public int numSpikes;
     public int numActive;
     public int numBullets;
-    public float timeScale;
 
     //These are lists ObjectManager will use to keep track of all the duplicated objects it has made
     List<GameObject> whiteSpikeList;
@@ -23,10 +21,6 @@ public class Object_Manager_2 : MonoBehaviour
     List<GameObject> yellowBulletList;
     List<GameObject> blueBulletList;
     List<GameObject> greenBulletList;
-
-    //UI
-    public Text timeText;
-    float time = 0;
 
     //Spawn manager
     public static SpawnManager spawnManager; 
@@ -43,7 +37,6 @@ public class Object_Manager_2 : MonoBehaviour
         greenBulletList = new List<GameObject>();
         spawnSpikes();
         spawnBullets();
-        timeText.text = "Seconds Alive: " + ((int)Time.deltaTime);
 
         numSpikes = 0;
         numActive = 0;
@@ -53,12 +46,10 @@ public class Object_Manager_2 : MonoBehaviour
     void Update()
     {
         clearOldObjects();
-        time = time + Time.deltaTime;
-        timeText.text = "Seconds Alive: " + ((int)time).ToString();
-        Time.timeScale = timeScale;
         manageNumSpikes();
     }
 
+  
     void clearOldObjects()
     {
         //TODO bullets

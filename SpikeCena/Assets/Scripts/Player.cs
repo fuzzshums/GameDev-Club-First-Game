@@ -119,6 +119,7 @@ public class Player : MonoBehaviour {
         if (other.gameObject.tag == "Powerup")
         {
             other.gameObject.GetComponent<Powerup>().transform.position = new Vector2(-10f, -10f);
+            myMasterMind.GetComponent<MasterMind>().increaseScore(100);
             yield return new WaitForSeconds(5);
             other.gameObject.GetComponent<Powerup>().randomizePos();
             changeBullet();

@@ -6,6 +6,7 @@ public class Powerup : MonoBehaviour {
 
     Vector2 randomPos;
     Random rnd = new Random();
+    
 
 	// Use this for initialization
 	void Start () {
