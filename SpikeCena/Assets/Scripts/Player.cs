@@ -51,32 +51,20 @@ public class Player : MonoBehaviour {
             playerPosition.x += movementSpeed * Time.deltaTime;
             this.transform.position = playerPosition;
         }
-        if (Input.GetMouseButtonDown(0) && currentBullet == 0) //NOTE: removed space for hotkey max view window
+        if (Input.GetMouseButtonDown(0)) //NOTE: removed space for hotkey max view window
         {
             var targetPos = Input.mousePosition;
             targetPos = Camera.main.ScreenToWorldPoint(targetPos);
             objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(currentBullet, targetPos);
         }
-        if (Input.GetMouseButtonDown(0) && currentBullet != 0)
-        {
-            objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(currentBullet, Input.mousePosition);
-        }
         if (Input.GetMouseButtonDown(1))
         {
-            changeBullet();
-        }
-
-    }
-
-    public void changeBullet()
-    {
-        if (currentBullet == 1)
-        {
-            currentBullet = 0;
-        }
-        else
-        {
-            currentBullet++; 
+            if (currentBullet == 3) {
+                currentBullet = 0;
+            } else {
+                currentBullet++; //changed for TortoiseSVN testing (was currentBullet++;) Looks Good! (Added in merge) - CHANGED BACK test
+                
+            }
         }
     }
 
@@ -111,11 +99,6 @@ public class Player : MonoBehaviour {
             */
             other.gameObject.GetComponent<SpikeWhite>().resetPos();
             Die();
-        }
-        if (other.gameObject.tag == "Powerup")
-        {
-            other.gameObject.GetComponent<Powerup>().randomizePos();
-            changeBullet();
         }
     }
 }

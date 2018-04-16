@@ -6,8 +6,6 @@ TagManager:
   tags:
   - Bullet
   - Spike
-  - spike
-  - Powerup
   layers:
   - Default
   - TransparentFX
