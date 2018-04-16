@@ -81,7 +81,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xspeed: 0
-  yspeed: 0
+  yspeed: 1
   color: 119
 --- !u!212 &212526230884500868
 SpriteRenderer:

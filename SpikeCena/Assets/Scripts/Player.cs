@@ -8,19 +8,21 @@ public class Player : MonoBehaviour {
     GameObject myMasterMind;
     public int health;
     public float movementSpeed;
-
+    
     //private vars
     private Vector2 playerPosition;
     private int currentBullet;
     private float flinchTime = 0.1f;     //time player color changes for when hit
     private Color damagedColor = Color.red;
     private Color regColor;
+    private int bulletCount;
 
     void Start () {
         myMasterMind = GameObject.Find("Master Mind");
         playerPosition = this.transform.position;
         //int currentBullet = 0;
         regColor = GetComponent<SpriteRenderer>().color;
+        bulletCount = 0;
 	}
 	
 	// Update is called once per frame yes test change code!
@@ -60,9 +62,11 @@ public class Player : MonoBehaviour {
         if (Input.GetMouseButtonDown(0) && currentBullet != 0)
         {
             objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(currentBullet, Input.mousePosition);
+            bulletCount++;
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) || bulletCount > 10)
         {
+            bulletCount = 0;
             changeBullet();
         }
 
@@ -94,7 +98,7 @@ public class Player : MonoBehaviour {
         GetComponent<SpriteRenderer>().color = regColor;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private IEnumerator OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.tag == "Spike")
         {
@@ -114,6 +118,8 @@ public class Player : MonoBehaviour {
         }
         if (other.gameObject.tag == "Powerup")
         {
+            other.gameObject.GetComponent<Powerup>().transform.position = new Vector2(-10f, -10f);
+            yield return new WaitForSeconds(5);
             other.gameObject.GetComponent<Powerup>().randomizePos();
             changeBullet();
         }

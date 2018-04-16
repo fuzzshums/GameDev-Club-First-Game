@@ -14,8 +14,8 @@ public class Powerup : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+
+    }
 
     public void randomizePos()
     {
@@ -23,12 +23,5 @@ public class Powerup : MonoBehaviour {
         this.transform.position = randomPos;
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            other.GetComponent<Player>().changeBullet();
-            randomizePos();
-        }
-    }
+  
 }
