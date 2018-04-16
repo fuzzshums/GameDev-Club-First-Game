@@ -685,11 +685,11 @@ Prefab:
         type: 2}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: da6198a836d89954f908dfc149233020, type: 3}
+      objectReference: {fileID: 8300000, guid: 1556813dcbe6a474fbed97f84dfc4eb0, type: 3}
     - target: {fileID: 114025280872696348, guid: bca73b175fbe8a744acd67762738d922,
         type: 2}
       propertyPath: dampening
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bca73b175fbe8a744acd67762738d922, type: 2}

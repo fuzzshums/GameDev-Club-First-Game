@@ -18,6 +18,7 @@ public class MusicTest : MonoBehaviour {
     public float colorScale;
     public float value;
     public float scaleThreshold;
+    public float VO_oldConstant;
     public float VO_constant;
     int number; //TODO check on breaking down into fewer components + damping
     int numberDrawn;
@@ -53,6 +54,8 @@ public class MusicTest : MonoBehaviour {
         _antisampleCube = new GameObject[number];
         samples = new float[number];
         oldSamples = new float[number];
+        VO_constant = 1;
+        VO_oldConstant = 1;
 
         for (int i = 0; i < numberDrawn; i++)
         {
@@ -163,15 +166,46 @@ public class MusicTest : MonoBehaviour {
                         {
                             VO_constant = 1; // 1.25f;
                             //float speedModification = (midSection / (midSection + 1));
-                            float speedModification = (sum / (sum + 1));
+                            float speedModification = sum;
+                            //float speedModification = (sum / (sum + 1));
                             speedModification /= 4; //at max can be .25
                             if (speedModification > .25f)
                             {
                                 speedModification = .25f;
                             }
                             VO_constant += speedModification;
+                            
+                            
+                            if (VO_constant < VO_oldConstant)
+                            {
+                                
+                                VO_oldConstant -= .001f * Time.deltaTime;
+                                if (VO_oldConstant < 1)
+                                    VO_oldConstant = 1;
+                                VO_constant = VO_oldConstant;
+                                
+                                //VO_constant = Mathf.Lerp(VO_oldConstant, VO_constant, .0001f);
+                            }
+                            else
+                            {
+                                /*
+                                VO_oldConstant += .001f * Time.deltaTime;
+                                if (VO_oldConstant > 1.25f)
+                                {
+                                    VO_oldConstant = 1.25f;
+                                }
+                                VO_constant = VO_oldConstant;
+                                */
+                                VO_constant = Mathf.Lerp(VO_oldConstant, VO_constant, .005f);
+                            }
+                            
+                            
+                            VO_oldConstant = VO_constant;
+                            //VO_constant = 1;
                             //VO_constant = 1.25f; //TODO make a function similar to check if variance enough / enough time to change!
                             oldSamples[i] *= ((VO_constant /* + lerpRate*/) + Time.deltaTime); //TODO cap this too? NOTE: ## lerping here
+                            
+
                         }
                         float xScale = startScale.x;
                         float yScale = startScale.y - oldSamples[i]; //-  a growing scalar
