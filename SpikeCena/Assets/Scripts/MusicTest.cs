@@ -25,8 +25,12 @@ public class MusicTest : MonoBehaviour {
     float reverseScale;
     float xScale = .07f;
     private float[] samples;
+
+    public float[] bass_samples;
+    int bass_count;
     private float[] oldSamples;
     float sum;
+    float bass;
 
     //VISUALIZTION
     GameObject[] _sampleCube;
@@ -46,6 +50,7 @@ public class MusicTest : MonoBehaviour {
 
     void Start () {
         number = 1024;
+        bass_count = 8;
         numberDrawn = number / 2;
         reverseScale = number / 256;
         xScale /= reverseScale;
@@ -53,6 +58,7 @@ public class MusicTest : MonoBehaviour {
         _sampleCube = new GameObject[number];
         _antisampleCube = new GameObject[number];
         samples = new float[number];
+        bass_samples = new float[bass_count];
         oldSamples = new float[number];
         VO_constant = 1;
         VO_oldConstant = 1;
@@ -77,14 +83,21 @@ public class MusicTest : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         AudioListener.GetSpectrumData(samples, 0, fftWindow);
+        bass = 0;
+        for (int i = 0; i < bass_count; i++)
+        {
+            bass_samples[i] = samples[i];
+            bass += bass_samples[i]/2;
+        }
 
         sum = 0;
         float midSection = 0;
+        
         float mostImportant = numberDrawn; //NOTE: OLD WAS 128
         for (int i = 0; i < mostImportant; i++)
         {
             sum += samples[i]/2;
-            if (i > 32)
+            if (i > bass_count)
             {
                 midSection += samples[i]*4;
             }
@@ -252,6 +265,11 @@ public class MusicTest : MonoBehaviour {
     public float getIntensity()
     {
         return sum;
+    }
+
+    public float getBass()
+    {
+        return bass;
     }
 }
 

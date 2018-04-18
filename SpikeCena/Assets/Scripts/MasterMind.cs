@@ -14,6 +14,7 @@ public class MasterMind : MonoBehaviour {
 
     //View Only's
     public float VO_rate;
+    public float[] Internsity;
     //Use to modify params of other classes
     public float rateCap;
     public float playerRateCap;
@@ -36,6 +37,7 @@ public class MasterMind : MonoBehaviour {
         objectManager = GameObject.Find("Object Manager");
 		musicManager = GameObject.Find("Music Master");
         player = GameObject.Find("Player");
+        Internsity = new float[2];
 
         //Variables
         rateCap = 12f;
@@ -108,21 +110,27 @@ public class MasterMind : MonoBehaviour {
             //Debug.Log(Scale);
         }
         newNumSpikes = .75f + Scale * 12f * musicManager.GetComponent<MusicTest>().getIntensity();
-
-
-        if (Mathf.Abs(newNumSpikes - oldNumSpikes) > numSpikeThreshold && timeWithinThreshold > timeCap)
+        float bassBoostCount = Scale * 20f * musicManager.GetComponent<MusicTest>().getBass();
+        newNumSpikes += bassBoostCount; //add a weight for bass
+        Internsity[0] = newNumSpikes;
+        Internsity[1] = bassBoostCount;
+        //TODO scale timewithinThreshold by current intensity -> i.e. "slow time when game slows time?"
+        float check = timeWithinThreshold * (this.getWhiteMovementRate() /2);
+        if (Mathf.Abs(newNumSpikes - oldNumSpikes) > numSpikeThreshold && check > timeCap) //check was timeWithinThreshold
         {
             timeWithinThreshold = 0;
-            if (newNumSpikes > oldNumSpikes + 2)
+            
+            if (newNumSpikes > oldNumSpikes + 1)
             {
-                oldNumSpikes += 2; //don't give away all our spikes at once!
+                oldNumSpikes += 1; //don't give away all our spikes at once!
                 return (int)oldNumSpikes;
             }
+            
 
             if (newNumSpikes + 2 < oldNumSpikes)
             {
                 oldNumSpikes -= 2;
-                return (int)oldNumSpikes;
+                return (int) oldNumSpikes;
             }
             else if (newNumSpikes < oldNumSpikes)
             {
