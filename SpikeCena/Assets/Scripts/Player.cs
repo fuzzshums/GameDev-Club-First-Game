@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
     void Start () {
         myMasterMind = GameObject.Find("Master Mind");
         playerPosition = this.transform.position;
-        //int currentBullet = 0;
+        currentBullet = 0;
         regColor = GetComponent<SpriteRenderer>().color;
         bulletCount = 0;
 	}
@@ -64,29 +64,17 @@ public class Player : MonoBehaviour {
             objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(currentBullet, Input.mousePosition);
             bulletCount++;
         }
-        if (Input.GetMouseButtonDown(1) || bulletCount > 10)
+        if (Input.GetMouseButtonDown(0) && bulletCount > 10)
         {
             bulletCount = 0;
-            changeBullet();
-        }
-
-    }
-
-    public void changeBullet()
-    {
-        if (currentBullet == 1)
-        {
             currentBullet = 0;
         }
-        else
-        {
-            currentBullet++; 
-        }
+
     }
 
     private void Die()
     {
-        //Do dying stuff
+        myMasterMind.GetComponent<MasterMind>().increaseScore(-100);
         Debug.Log("You've died.");
     }
 
@@ -120,9 +108,9 @@ public class Player : MonoBehaviour {
         {
             other.gameObject.GetComponent<Powerup>().transform.position = new Vector2(-10f, -10f);
             myMasterMind.GetComponent<MasterMind>().increaseScore(100);
+            currentBullet = 1;
             yield return new WaitForSeconds(5);
-            other.gameObject.GetComponent<Powerup>().randomizePos();
-            changeBullet();
+            other.gameObject.GetComponent<Powerup>().randomizePos(); 
         }
     }
 }
