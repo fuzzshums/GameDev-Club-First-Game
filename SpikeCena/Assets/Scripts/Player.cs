@@ -17,12 +17,22 @@ public class Player : MonoBehaviour {
     private Color regColor;
     private int bulletCount;
 
+    private int damagePenalty;
+    private int powerupPoints;
+
     void Start () {
         myMasterMind = GameObject.Find("Master Mind");
         playerPosition = this.transform.position;
         currentBullet = 0;
         regColor = GetComponent<SpriteRenderer>().color;
         bulletCount = 0;
+
+        //The temp idea is to have score be health.
+        MasterMind mm = myMasterMind.GetComponent<MasterMind>();
+        //intitiate health
+        mm.increaseScore(health);
+        damagePenalty = mm.damagePenalty;
+        powerupPoints = mm.powerupPoints;
 	}
 	
 	// Update is called once per frame yes test change code!
@@ -71,13 +81,7 @@ public class Player : MonoBehaviour {
         }
 
     }
-
-    private void Die()
-    {
-        myMasterMind.GetComponent<MasterMind>().increaseScore(-100);
-        Debug.Log("You've died.");
-    }
-
+   
     //Shows visual indication that player is damaged for flinchTime seconds
     IEnumerator OnDamage()
     {
@@ -102,12 +106,21 @@ public class Player : MonoBehaviour {
             other.gameObject.GetComponent<Spike>().Die();
             */
             other.gameObject.GetComponent<SpikeWhite>().resetPos();
-            Die();
+            //Damage is inputted as a positive number
+            int damage = damagePenalty * -1;
+            myMasterMind.GetComponent<MasterMind>().increaseScore(damage);
+            health += damage;
+            if (health <= 0)
+            {
+                this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
+                GameObject.Destroy(this.gameObject);
+            }
+            StartCoroutine(OnDamage());
         }
         if (other.gameObject.tag == "Powerup")
         {
             other.gameObject.GetComponent<Powerup>().transform.position = new Vector2(-10f, -10f);
-            myMasterMind.GetComponent<MasterMind>().increaseScore(100);
+            myMasterMind.GetComponent<MasterMind>().increaseScore(powerupPoints);
             currentBullet = 1;
             yield return new WaitForSeconds(5);
             other.gameObject.GetComponent<Powerup>().randomizePos(); 

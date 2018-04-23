@@ -14,7 +14,7 @@ public class MasterMind : MonoBehaviour {
 
     //View Only's
     public float VO_rate;
-    public float[] Internsity;
+    public float[] Intensity;
     //Use to modify params of other classes
     public float rateCap;
     public float playerRateCap;
@@ -26,18 +26,27 @@ public class MasterMind : MonoBehaviour {
     float timeCap;
     float totalTime;
 
+    //Scoring
+    public int damagePenalty;
+    public int hitSpikePoints;
+    public int powerupPoints;
+
     //UI
     public Text timeText;
     float time = 0;
     public Text scoreText;
-    float score = 0;
+    int score = 0;
+
+    //private scripts
+    private Player s_player;
 
     // Use this for initialization
     void Start () {
         objectManager = GameObject.Find("Object Manager");
 		musicManager = GameObject.Find("Music Master");
         player = GameObject.Find("Player");
-        Internsity = new float[2];
+        s_player = player.GetComponent<Player>();
+        Intensity = new float[2];
 
         //Variables
         rateCap = 12f;
@@ -55,10 +64,11 @@ public class MasterMind : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         totalTime += Time.deltaTime;
-
         time = time + Time.deltaTime;
         timeText.text = "Seconds Alive: " + ((int)time).ToString();
-        scoreText.text = "Score: " + (score + ((int)time)).ToString();
+        int s = (int)(score + time);
+        s_player.health = s;
+        scoreText.text = "Score: " + s.ToString();
     }
     //1.) @@@@@@   SPIKES   @@@@@@
     #region
@@ -112,8 +122,8 @@ public class MasterMind : MonoBehaviour {
         newNumSpikes = .75f + Scale * 12f * musicManager.GetComponent<MusicTest>().getIntensity();
         float bassBoostCount = Scale * 20f * musicManager.GetComponent<MusicTest>().getBass();
         newNumSpikes += bassBoostCount; //add a weight for bass
-        Internsity[0] = newNumSpikes;
-        Internsity[1] = bassBoostCount;
+        Intensity[0] = newNumSpikes;
+        Intensity[1] = bassBoostCount;
         //TODO scale timewithinThreshold by current intensity -> i.e. "slow time when game slows time?"
         float check = timeWithinThreshold * (this.getWhiteMovementRate() /2);
         if (Mathf.Abs(newNumSpikes - oldNumSpikes) > numSpikeThreshold && check > timeCap) //check was timeWithinThreshold

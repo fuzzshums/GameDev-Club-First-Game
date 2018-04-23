@@ -13,7 +13,8 @@ public class Bullet : MonoBehaviour {
     public GameObject myPlayer;
     GameObject myMasterMind;
 
-
+    private int hitSpikePoints;
+ 
     // Use this for initialization
     public void Start () {
         myMasterMind = GameObject.Find("Master Mind");
@@ -22,6 +23,7 @@ public class Bullet : MonoBehaviour {
         inactivePos = new Vector2(-10, -10);
         this.transform.position = inactivePos;
         myPlayer = GameObject.Find("Player");
+        hitSpikePoints = myMasterMind.GetComponent<MasterMind>().hitSpikePoints;
     }
 
     // Update is called once per frame
@@ -70,7 +72,7 @@ public class Bullet : MonoBehaviour {
         if (other.gameObject.CompareTag("Spike"))
         {
             other.GetComponent<SpikeWhite>().resetPos();
-            myMasterMind.GetComponent<MasterMind>().increaseScore(100);
+            myMasterMind.GetComponent<MasterMind>().increaseScore(hitSpikePoints);            
             resetPos();
         }
     }
