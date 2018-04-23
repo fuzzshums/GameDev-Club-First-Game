@@ -10,23 +10,25 @@ public class Player : MonoBehaviour {
     public float movementSpeed;
     
     //private vars
-    private Vector2 playerPosition;
     private int currentBullet;
     private float flinchTime = 0.1f;     //time player color changes for when hit
     private Color damagedColor = Color.red;
     private Color regColor;
     private int bulletCount;
+    private Rigidbody2D playerRB;
+    private Vector2 playerVelocity;
 
     private int damagePenalty;
     private int powerupPoints;
 
     void Start () {
         myMasterMind = GameObject.Find("Master Mind");
-        playerPosition = this.transform.position;
         currentBullet = 0;
         regColor = GetComponent<SpriteRenderer>().color;
         bulletCount = 0;
 
+        playerRB = GetComponent<Rigidbody2D>();
+        playerVelocity = new Vector2(0f, 0f);
         //The temp idea is to have score be health.
         MasterMind mm = myMasterMind.GetComponent<MasterMind>();
         //intitiate health
@@ -49,19 +51,26 @@ public class Player : MonoBehaviour {
         checkInput();
     }
 
+    private void FixedUpdate()
+    {
+        playerRB.velocity = playerVelocity;
+    }
+
     void checkInput()
     {
         Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
 
-        if ((Input.GetKey("a") || Input.GetKey("left")) && screenPos.x > 25)
+        if (Input.GetKey("a") || Input.GetKey("left"))
         {
-            playerPosition.x -= movementSpeed * Time.deltaTime;
-            this.transform.position = playerPosition;
+           playerVelocity.Set(-movementSpeed, 0);
         }
-        if ((Input.GetKey("d") || Input.GetKey("right")) && screenPos.x < Screen.width - 25)
+        else if (Input.GetKey("d") || Input.GetKey("right"))
         {
-            playerPosition.x += movementSpeed * Time.deltaTime;
-            this.transform.position = playerPosition;
+            playerVelocity.Set(movementSpeed, 0);
+        }
+        else
+        {
+            playerVelocity.Set(0, 0);
         }
         if (Input.GetMouseButtonDown(0) && currentBullet == 0) //NOTE: removed space for hotkey max view window
         {
@@ -112,12 +121,11 @@ public class Player : MonoBehaviour {
             health += damage;
             if (health <= 0)
             {
-                this.gameObject.GetComponent<SpriteRenderer>().enabled = false;
                 GameObject.Destroy(this.gameObject);
             }
             StartCoroutine(OnDamage());
         }
-        if (other.gameObject.tag == "Powerup")
+        else if (other.gameObject.tag == "Powerup")
         {
             other.gameObject.GetComponent<Powerup>().transform.position = new Vector2(-10f, -10f);
             myMasterMind.GetComponent<MasterMind>().increaseScore(powerupPoints);
