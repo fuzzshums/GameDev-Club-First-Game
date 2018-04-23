@@ -33,7 +33,7 @@ public class OpenFolder : MonoBehaviour
             temp = "Assets/" + A[i].Remove(0, path.Length);
             Debug.Log(temp);
             AssetDatabase.ImportAsset(temp);
-            WebRequestMultimedia.GetAudioClip();
+            //WebRequestMultimedia.GetAudioClip();
         }
         
 
