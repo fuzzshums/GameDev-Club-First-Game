@@ -40,6 +40,15 @@ public class MasterMind : MonoBehaviour {
     //private scripts
     private Player s_player;
 
+    //stats
+    private int totalDamage;
+    private int numHits; //number of spikes shot down
+    private int numSpawned; //number of bullets spawned;
+    private float hitRatio;
+    private int maxSpikeSpawn; //max spikes on screen;
+    private int totalSpikesSpawned;
+    private int numPowCollected;
+
     // Use this for initialization
     void Start () {
         objectManager = GameObject.Find("Object Manager");
@@ -59,6 +68,15 @@ public class MasterMind : MonoBehaviour {
 
         timeText.text = "Seconds Alive: " + ((int)Time.deltaTime);
         scoreText.text = "Score: " + 0;
+
+        //stat init
+        totalDamage = 0;
+        numHits = 0;
+        numSpawned = 0;
+        hitRatio = 0f;
+        maxSpikeSpawn = 0; 
+        totalSpikesSpawned = 0;
+        numPowCollected = 0;
     }
 
     // Update is called once per frame
@@ -69,6 +87,21 @@ public class MasterMind : MonoBehaviour {
         int s = (int)(score + time);
         s_player.health = s;
         scoreText.text = "Score: " + s.ToString();
+    }
+    private void LateUpdate()
+    {
+        //set some stats
+        if(numSpawned > 0)
+        {
+            hitRatio = ((float)numHits / numSpawned) * 100;
+        }        
+        Debug.Log("numHits: " + numHits);
+        Debug.Log("numSpawned: " + numSpawned);
+        Debug.Log("hitRatio: " + hitRatio);
+        Debug.Log("totalDamage: " + totalDamage);
+        Debug.Log("maxSpikeSpawnd: " + maxSpikeSpawn);
+        Debug.Log("totalSpikeSpawned: " + totalSpikesSpawned);
+        Debug.Log("numPowColleted: " + numPowCollected);
     }
     //1.) @@@@@@   SPIKES   @@@@@@
     #region
@@ -164,7 +197,40 @@ public class MasterMind : MonoBehaviour {
     #region
     public void increaseScore(int n)
     {
+        //if the player is hit by a spike, increase total damage taken stat
+        if(n < 0)
+        {
+            int damage = -n;
+            totalDamage += damage;
+        }
+        //change the score
         score += n;
+    }
+    #endregion
+    //4.) @@@@@@    STATS   @@@@@@
+    #region
+    public void setMaxSpawned(int n)
+    {
+        if(maxSpikeSpawn < n)
+        {
+            maxSpikeSpawn = n;
+        }        
+    }
+    public void increaseNumSpikeSpawned(int n)
+    {
+        totalSpikesSpawned += n;
+    }
+    public void increaseBulletSpawned(int n)
+    {
+        numSpawned += n;
+    }
+    public void increaseNumHits(int n)
+    {
+        numHits += n;
+    }
+    public void increasePowPickedUp()
+    {
+        numPowCollected++;
     }
     #endregion
 

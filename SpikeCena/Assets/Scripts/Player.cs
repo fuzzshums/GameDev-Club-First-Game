@@ -21,8 +21,12 @@ public class Player : MonoBehaviour {
     private int damagePenalty;
     private int powerupPoints;
 
+    //scripts
+    MasterMind mmScript;
+
     void Start () {
         myMasterMind = GameObject.Find("Master Mind");
+        mmScript = myMasterMind.GetComponent<MasterMind>();
         currentBullet = 0;
         regColor = GetComponent<SpriteRenderer>().color;
         bulletCount = 0;
@@ -130,6 +134,7 @@ public class Player : MonoBehaviour {
             other.gameObject.GetComponent<Powerup>().transform.position = new Vector2(-10f, -10f);
             myMasterMind.GetComponent<MasterMind>().increaseScore(powerupPoints);
             currentBullet = 1;
+            mmScript.increasePowPickedUp();
             yield return new WaitForSeconds(5);
             other.gameObject.GetComponent<Powerup>().randomizePos(); 
         }

@@ -13,11 +13,13 @@ public class Bullet : MonoBehaviour {
     public GameObject myPlayer;
     GameObject myMasterMind;
 
+    private MasterMind mmScript;
     private int hitSpikePoints;
  
     // Use this for initialization
     public void Start () {
         myMasterMind = GameObject.Find("Master Mind");
+        mmScript = myMasterMind.GetComponent<MasterMind>();
         firing = false;
         fireRequest = false;
         inactivePos = new Vector2(-10, -10);
@@ -72,7 +74,8 @@ public class Bullet : MonoBehaviour {
         if (other.gameObject.CompareTag("Spike"))
         {
             other.GetComponent<SpikeWhite>().resetPos();
-            myMasterMind.GetComponent<MasterMind>().increaseScore(hitSpikePoints);            
+            myMasterMind.GetComponent<MasterMind>().increaseScore(hitSpikePoints);
+            mmScript.increaseNumHits(1);
             resetPos();
         }
     }

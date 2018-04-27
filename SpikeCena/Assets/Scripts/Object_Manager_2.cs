@@ -22,13 +22,14 @@ public class Object_Manager_2 : MonoBehaviour
     List<GameObject> blueBulletList;
     List<GameObject> greenBulletList;
 
-    //Spawn manager
-    public static SpawnManager spawnManager; 
+    //Mastermind script
+    MasterMind mmScript;
 
     // Use this for initialization
     void Start()
     {
         myMasterMind = GameObject.Find("Master Mind");
+        mmScript = myMasterMind.GetComponent<MasterMind>();
         whiteSpikeList = new List<GameObject>();
 
         whiteBulletList = new List<GameObject>();
@@ -47,6 +48,7 @@ public class Object_Manager_2 : MonoBehaviour
     {
         clearOldObjects();
         manageNumSpikes();
+        mmScript.setMaxSpawned(numActive);
     }
 
   
@@ -133,6 +135,7 @@ public class Object_Manager_2 : MonoBehaviour
                         whiteSpikeList[i].GetComponent<Renderer>().enabled = true;
                         whiteSpikeList[i].GetComponent<SpikeWhite>().resetPos();
                         numActive += 1;
+                        mmScript.increaseNumSpikeSpawned(1);
                     }
                 }
 
@@ -188,6 +191,7 @@ public class Object_Manager_2 : MonoBehaviour
                 if (yellowBulletList[i].GetComponent<Bullet>().fireRequest == false)
                 {
                     yellowBulletList[i].GetComponent<Bullet>().fireRequest = true;
+                    mmScript.increaseBulletSpawned(1);
                     return;
                 }
             }
@@ -226,6 +230,7 @@ public class Object_Manager_2 : MonoBehaviour
                 {
                     whiteBulletList[i].GetComponent<Bullet>().targetPos = targetPos;
                     whiteBulletList[i].GetComponent<Bullet>().fireRequest = true;
+                    mmScript.increaseBulletSpawned(1);
                     return;
                 }
             }
