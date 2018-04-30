@@ -94,6 +94,7 @@ public class MasterMind : MonoBehaviour {
         if(numSpawned > 0)
         {
             hitRatio = ((float)numHits / numSpawned) * 100;
+            Stats.HitRatio = hitRatio;
         }        
         Debug.Log("numHits: " + numHits);
         Debug.Log("numSpawned: " + numSpawned);
@@ -202,6 +203,7 @@ public class MasterMind : MonoBehaviour {
         {
             int damage = -n;
             totalDamage += damage;
+            Stats.TotalDamage = totalDamage;
         }
         //change the score
         score += n;
@@ -214,23 +216,28 @@ public class MasterMind : MonoBehaviour {
         if(maxSpikeSpawn < n)
         {
             maxSpikeSpawn = n;
+            Stats.MaxSpikeSpawn = maxSpikeSpawn;
         }        
     }
     public void increaseNumSpikeSpawned(int n)
     {
         totalSpikesSpawned += n;
+        Stats.TotalSpikesSpawned = totalSpikesSpawned;
     }
     public void increaseBulletSpawned(int n)
     {
         numSpawned += n;
+        Stats.NumSpawned = numSpawned;
     }
     public void increaseNumHits(int n)
     {
         numHits += n;
+        Stats.NumHits = numHits;
     }
     public void increasePowPickedUp()
     {
         numPowCollected++;
+        Stats.NumPowCollected = numPowCollected;
     }
     #endregion
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour {
 
@@ -66,7 +67,7 @@ public class Player : MonoBehaviour {
 
         if (Input.GetKey("a") || Input.GetKey("left"))
         {
-           playerVelocity.Set(-movementSpeed, 0);
+            playerVelocity.Set(-movementSpeed, 0);
         }
         else if (Input.GetKey("d") || Input.GetKey("right"))
         {
@@ -125,7 +126,7 @@ public class Player : MonoBehaviour {
             health += damage;
             if (health <= 0)
             {
-                GameObject.Destroy(this.gameObject);
+                SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
             }
             StartCoroutine(OnDamage());
         }
