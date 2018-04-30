@@ -96,13 +96,6 @@ public class MasterMind : MonoBehaviour {
             hitRatio = ((float)numHits / numSpawned) * 100;
             Stats.HitRatio = hitRatio;
         }        
-        Debug.Log("numHits: " + numHits);
-        Debug.Log("numSpawned: " + numSpawned);
-        Debug.Log("hitRatio: " + hitRatio);
-        Debug.Log("totalDamage: " + totalDamage);
-        Debug.Log("maxSpikeSpawnd: " + maxSpikeSpawn);
-        Debug.Log("totalSpikeSpawned: " + totalSpikesSpawned);
-        Debug.Log("numPowColleted: " + numPowCollected);
     }
     //1.) @@@@@@   SPIKES   @@@@@@
     #region
