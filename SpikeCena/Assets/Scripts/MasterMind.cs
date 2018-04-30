@@ -94,7 +94,8 @@ public class MasterMind : MonoBehaviour {
         if(numSpawned > 0)
         {
             hitRatio = ((float)numHits / numSpawned) * 100;
-        }        
+        }
+        /*
         Debug.Log("numHits: " + numHits);
         Debug.Log("numSpawned: " + numSpawned);
         Debug.Log("hitRatio: " + hitRatio);
@@ -102,6 +103,7 @@ public class MasterMind : MonoBehaviour {
         Debug.Log("maxSpikeSpawnd: " + maxSpikeSpawn);
         Debug.Log("totalSpikeSpawned: " + totalSpikesSpawned);
         Debug.Log("numPowColleted: " + numPowCollected);
+        */
     }
     //1.) @@@@@@   SPIKES   @@@@@@
     #region
