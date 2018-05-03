@@ -146,8 +146,8 @@ public class MasterMind : MonoBehaviour {
         {
             //Debug.Log(Scale);
         }
-        newNumSpikes = .75f + Scale * 12f * musicManager.GetComponent<MusicTest>().getIntensity();
-        float bassBoostCount = Scale * 20f * musicManager.GetComponent<MusicTest>().getBass();
+        newNumSpikes = 5 + Scale * 25f * musicManager.GetComponent<MusicTest>().getIntensity();
+        float bassBoostCount = Scale * 40f * musicManager.GetComponent<MusicTest>().getBass();
         newNumSpikes += bassBoostCount; //add a weight for bass
         Intensity[0] = newNumSpikes;
         Intensity[1] = bassBoostCount;

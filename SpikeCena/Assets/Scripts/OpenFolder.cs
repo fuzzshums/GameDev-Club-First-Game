@@ -6,12 +6,23 @@ using UnityEngine;
 using System;
 using System.Text;
 
+//todo bullet counter
+//todo song_over bool
+//todo average music intensity
+//todo spike diagonal
+
+// score vs. health
+// power up -> ammo
+// UI ammo  & song over screen
+// put score in the stats!!!!
+
 public class OpenFolder : MonoBehaviour
 {
     // https://docs.unity3d.com/ScriptReference/Path.GetFileName.html
 
     //https://answers.unity.com/questions/1381625/why-was-wwwaudioclip-removed.html
     //https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequestMultimedia.GetAudioClip.html
+    //https://answers.unity.com/questions/737002/wav-byte-to-audioclip.html
     GameObject musicManager;
     // Use this for initialization
     public int position = 0;
