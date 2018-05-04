@@ -31,14 +31,18 @@ public class MasterMind : MonoBehaviour {
     public int hitSpikePoints;
     public int powerupPoints;
 
+    //private scripts
+    private Player s_player;
+
     //UI
     public Text timeText;
     float time = 0;
     public Text scoreText;
     int score = 0;
-
-    //private scripts
-    private Player s_player;
+    public Text healthText;
+    int health = 0;
+    public Text ammoText;
+    int ammo = 0;
 
     //stats
     private int totalDamage;
@@ -70,7 +74,7 @@ public class MasterMind : MonoBehaviour {
         scoreText.text = "Score: " + 0;
 
         //stat init
-        totalDamage = 0;
+        health = s_player.health;
         numHits = 0;
         numSpawned = 0;
         hitRatio = 0f;
@@ -85,8 +89,9 @@ public class MasterMind : MonoBehaviour {
         time = time + Time.deltaTime;
         timeText.text = "Seconds Alive: " + ((int)time).ToString();
         int s = (int)(score + time);
-        s_player.health = s;
         scoreText.text = "Score: " + s.ToString();
+        healthText.text = "Health:" + displayAmount(health, false);
+        ammoText.text = "Ammo: " + displayAmount(ammo, true);
     }
     private void LateUpdate()
     {
@@ -94,7 +99,6 @@ public class MasterMind : MonoBehaviour {
         if(numSpawned > 0)
         {
             hitRatio = ((float)numHits / numSpawned) * 100;
-            Stats.HitRatio = hitRatio;
         }        
     }
     //1.) @@@@@@   SPIKES   @@@@@@
@@ -186,52 +190,79 @@ public class MasterMind : MonoBehaviour {
     #endregion
     //2.) @@@@@@   PLAYER   @@@@@@
     #region
+    public void modifyHealth(int n)
+    {
+        health += n;
+    }
     #endregion
     //3.) @@@@@@     UI     @@@@@@
     #region
-    public void increaseScore(int n)
+    private string displayAmount(int n, bool k)
     {
-        //if the player is hit by a spike, increase total damage taken stat
-        if(n < 0)
+        if (!k && n > 10)
         {
-            int damage = -n;
-            totalDamage += damage;
-            Stats.TotalDamage = totalDamage;
+            return " a lot";
         }
-        //change the score
-        score += n;
+        string amount = " ";
+        for (int i = 0; i < n; i++)
+        {
+            if (i % 10 == 0 && i >= 10 && k)
+            {
+                amount = amount + " ";
+            }
+            amount = amount + "|";
+        }
+       
+        return amount;
+    }
+    public void increaseAmmo()
+    {
+        ammo += 10;
+    }
+    public void decreaseAmmo()
+    {
+        ammo--;
     }
     #endregion
     //4.) @@@@@@    STATS   @@@@@@
     #region
+    public void modifyScore(int n)
+    {
+        score += n;
+    }
     public void setMaxSpawned(int n)
     {
         if(maxSpikeSpawn < n)
         {
             maxSpikeSpawn = n;
-            Stats.MaxSpikeSpawn = maxSpikeSpawn;
         }        
     }
     public void increaseNumSpikeSpawned(int n)
     {
         totalSpikesSpawned += n;
-        Stats.TotalSpikesSpawned = totalSpikesSpawned;
     }
     public void increaseBulletSpawned(int n)
     {
         numSpawned += n;
-        Stats.NumSpawned = numSpawned;
     }
     public void increaseNumHits(int n)
     {
         numHits += n;
-        Stats.NumHits = numHits;
     }
     public void increasePowPickedUp()
     {
         numPowCollected++;
+    }
+    public void finalizeStats()
+    {
+        Stats.Score = score;
+        Stats.MaxSpikeSpawn = maxSpikeSpawn;
+        Stats.TotalSpikesSpawned = totalSpikesSpawned;
+        Stats.NumSpawned = numSpawned;
+        Stats.HitRatio = hitRatio;
+        Stats.NumHits = numHits;
         Stats.NumPowCollected = numPowCollected;
     }
-    #endregion
 
+    #endregion
 }

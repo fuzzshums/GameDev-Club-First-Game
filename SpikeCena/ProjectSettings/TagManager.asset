@@ -9,6 +9,7 @@ TagManager:
   - spike
   - Powerup
   - Boundary
+  - Health
   layers:
   - Default
   - TransparentFX

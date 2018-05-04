@@ -9,7 +9,7 @@ public class ScoreProvider : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        statsText.text = "Total Damage: " + Stats.TotalDamage + "\n" +
+        statsText.text = "Score: " + Stats.Score + "\n" +
                          "Number of Hits: " + Stats.NumHits + "\n" +
                          "Bullets Spawned: " + Stats.NumSpawned + "\n" +
                          "Hit Ratio: " + Stats.HitRatio + "\n" +

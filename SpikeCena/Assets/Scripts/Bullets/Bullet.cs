@@ -74,7 +74,7 @@ public class Bullet : MonoBehaviour {
         if (other.gameObject.CompareTag("Spike"))
         {
             other.GetComponent<SpikeWhite>().resetPos();
-            myMasterMind.GetComponent<MasterMind>().increaseScore(hitSpikePoints);
+            myMasterMind.GetComponent<MasterMind>().modifyScore(hitSpikePoints);
             mmScript.increaseNumHits(1);
             resetPos();
         }

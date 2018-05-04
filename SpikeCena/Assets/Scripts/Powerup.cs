@@ -20,7 +20,7 @@ public class Powerup : MonoBehaviour {
 
     public void randomizePos()
     {
-        randomPos = new Vector2(Random.Range(-8.0f, 6.0f) ,-4.3f);
+        randomPos = new Vector2(Random.Range(-8.0f, 6.0f) , -4.26f);
         this.transform.position = randomPos;
     }
 

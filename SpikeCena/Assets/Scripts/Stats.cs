@@ -4,18 +4,18 @@ using UnityEngine;
 
 public static class Stats
 {
-    private static int totalDamage, numHits, numSpawned, maxSpikeSpawn, totalSpikesSpawned, numPowCollected;
+    private static int score, numHits, numSpawned, maxSpikeSpawn, totalSpikesSpawned, numPowCollected;
     private static float hitRatio;
 
-    public static int TotalDamage
+    public static int Score
     {
         get
         {
-            return totalDamage;
+            return score;
         }
         set
         {
-            totalDamage = value;
+            score = value;
         }
     }
 
