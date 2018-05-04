@@ -74,7 +74,7 @@ public class Player : MonoBehaviour {
         {
             playerVelocity.Set(0, 0);
         }
-        if (Input.GetMouseButtonDown(0) && bulletCount > 0) //NOTE: removed space for hotkey max view window
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.I)) && bulletCount > 0) //NOTE: removed space for hotkey max view window
         {
             if (currentBullet == 0)
             {
@@ -142,7 +142,7 @@ public class Player : MonoBehaviour {
             if (bulletCount + 10 <= 50)
             {
                 bulletCount += 10;
-                myMasterMind.GetComponent<MasterMind>().increaseAmmo();
+                mmScript.increaseAmmo();
             }
             yield return new WaitForSeconds(5);
             other.gameObject.GetComponent<Powerup>().randomizePos(); 
@@ -153,8 +153,8 @@ public class Player : MonoBehaviour {
             myMasterMind.GetComponent<MasterMind>().modifyScore(powerupPoints);
             mmScript.increasePowPickedUp();
             health++;
-            myMasterMind.GetComponent<MasterMind>().modifyHealth(1);
-            yield return new WaitForSeconds(15);
+            mmScript.modifyHealth(1);
+            yield return new WaitForSeconds(10);
             other.gameObject.GetComponent<Powerup>().randomizePos();
         }
     }

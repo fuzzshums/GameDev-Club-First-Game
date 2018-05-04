@@ -26,6 +26,9 @@ public class MasterMind : MonoBehaviour {
     float timeCap;
     float totalTime;
 
+    //public vars
+    public int maxBullets; //max bullets player can store
+
     //Scoring
     public int damagePenalty;
     public int hitSpikePoints;
@@ -90,8 +93,8 @@ public class MasterMind : MonoBehaviour {
         timeText.text = "Seconds Alive: " + ((int)time).ToString();
         int s = (int)(score + time);
         scoreText.text = "Score: " + s.ToString();
-        healthText.text = "Health:" + displayAmount(health, false);
-        ammoText.text = "Ammo: " + displayAmount(ammo, true);
+        //healthText.text = "Health: " + displayAmount(health, false);
+        //ammoText.text = "Ammo: " + displayAmount(ammo, true);
     }
     private void LateUpdate()
     {
@@ -193,6 +196,7 @@ public class MasterMind : MonoBehaviour {
     public void modifyHealth(int n)
     {
         health += n;
+        healthText.text = "Health: " + displayAmount(health, false);
     }
     #endregion
     //3.) @@@@@@     UI     @@@@@@
@@ -203,25 +207,49 @@ public class MasterMind : MonoBehaviour {
         {
             return " a lot";
         }
-        string amount = " ";
+        string amount = "";
+        if (n <= maxBullets)
+        {
+            if (n <= 10)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    amount = amount + "|";
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    amount = amount + "|";
+                }
+                amount = amount + " x" + (n - 10);
+            }
+        }
+        /*
         for (int i = 0; i < n; i++)
         {
             if (i % 10 == 0 && i >= 10 && k)
             {
-                amount = amount + " ";
+                amount = amount + " x" + (n-10);
             }
-            amount = amount + "|";
+            else
+            {
+                amount = amount + "|";
+            }
         }
-       
+       */
         return amount;
     }
     public void increaseAmmo()
     {
         ammo += 10;
+        ammoText.text = "Ammo: " + displayAmount(ammo, true);
     }
     public void decreaseAmmo()
     {
         ammo--;
+        ammoText.text = "Ammo: " + displayAmount(ammo, true);
     }
     #endregion
     //4.) @@@@@@    STATS   @@@@@@
