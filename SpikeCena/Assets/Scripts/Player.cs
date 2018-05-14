@@ -41,7 +41,7 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame yes test change code!
 	void Update () {
-        movementSpeed = .9f * myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate(); //Scaling
+        movementSpeed = 1f + .75f * myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate(); //Scaling
         if (movementSpeed > myMasterMind.GetComponent<MasterMind>().playerRateCap) //TODO remove these out of update place at top -UNLESS WE WANT TO DYNAMIC UPDATE
         {
             movementSpeed = myMasterMind.GetComponent<MasterMind>().playerRateCap;

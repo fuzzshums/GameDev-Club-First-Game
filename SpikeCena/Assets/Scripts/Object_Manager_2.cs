@@ -71,7 +71,7 @@ public class Object_Manager_2 : MonoBehaviour
             }
             */
 
-            if (whiteSpikeList[i].transform.position.y <= -4.2f)
+            if (whiteSpikeList[i].transform.position.y <= -4.07f)
             {
                 if (numActive > numSpikes && whiteSpikeList[i].activeSelf == true) //if we have too many AND you are active...
                 {
@@ -82,11 +82,10 @@ public class Object_Manager_2 : MonoBehaviour
                 else
                 {
                     whiteSpikeList[i].GetComponent<SpikeWhite>().resetPos();
-                    //randomizeSpawn(whiteSpikeList[i]);
                 }
             }
             
-            else if (whiteSpikeList[i].transform.position.y >= 5.25) //can also deactviate when above screen!
+            else if (whiteSpikeList[i].transform.position.y >= 5.51) //can also deactviate when above screen!
             {
                 if (numActive > numSpikes && whiteSpikeList[i].activeSelf == true)
                 {

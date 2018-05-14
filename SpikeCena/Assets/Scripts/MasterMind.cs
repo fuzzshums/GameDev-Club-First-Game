@@ -6,25 +6,41 @@ using UnityEngine.UI;
 //This class will manage all of the variables of everything else.
 //It will have getters that every other class can call to find out info.
 //Everything communicates through mastermind.
+
+// Win condition @ end of song fix
+// Music can be added by player - explore the asset
+// Ui cleaned up
+// finish the area of focus. - visual adjustments - maybe option to disable
+// sprites?
+// Particles  * could be impossible to add
+// Credits! Options / pause difficulty!
+// Option to chose visualization mode!
+// TODO make powerups fall down!
+// Add a WAY OUT!! HELP of the build!
+
 public class MasterMind : MonoBehaviour {
 
     GameObject objectManager;
     GameObject musicManager;
     GameObject player;
+    GameObject myAreaOfFocus;
 
     //View Only's
-    public float VO_rate;
+    static public float VO_rate;
     public float[] Intensity;
     //Use to modify params of other classes
     public float rateCap;
     public float playerRateCap;
 
+    //Spikes
     float oldNumSpikes;
     float newNumSpikes;
     float numSpikeThreshold;
     float timeWithinThreshold;
     float timeCap;
     float totalTime;
+    public static float areaOfFocusXScale;
+    float timeWithinThresholdAOF;
 
     //public vars
     public int maxBullets; //max bullets player can store
@@ -56,11 +72,16 @@ public class MasterMind : MonoBehaviour {
     private int totalSpikesSpawned;
     private int numPowCollected;
 
+    //management
+    static public bool game_over;
+    float silence_timer;
+
     // Use this for initialization
     void Start () {
         objectManager = GameObject.Find("Object Manager");
 		musicManager = GameObject.Find("Music Master");
         player = GameObject.Find("Player");
+        myAreaOfFocus = GameObject.Find("Area Of Focus");
         s_player = player.GetComponent<Player>();
         Intensity = new float[2];
 
@@ -70,7 +91,7 @@ public class MasterMind : MonoBehaviour {
 
         numSpikeThreshold = 1f;
         timeWithinThreshold = 0;
-        timeCap = .1f;
+        timeCap = .33f;
         totalTime = 0;
 
         timeText.text = "Seconds Alive: " + ((int)Time.deltaTime);
@@ -84,6 +105,10 @@ public class MasterMind : MonoBehaviour {
         maxSpikeSpawn = 0; 
         totalSpikesSpawned = 0;
         numPowCollected = 0;
+
+        //management
+        game_over = false;
+        silence_timer = 0;
     }
 
     // Update is called once per frame
@@ -95,7 +120,29 @@ public class MasterMind : MonoBehaviour {
         scoreText.text = "Score: " + s.ToString();
         //healthText.text = "Health: " + displayAmount(health, false);
         //ammoText.text = "Ammo: " + displayAmount(ammo, true);
+        calculateWhiteMovementRate();
+        check_game_over();
+        
     }
+
+    void check_game_over()
+    {
+        if (musicManager.GetComponent<MusicTest>().getIntensity() == 0)
+        {
+            silence_timer += Time.deltaTime;
+            if (silence_timer > 15)
+            {
+                Debug.Log("GAME OVER!");
+                game_over = true;
+            }
+        }
+        else
+        {
+            silence_timer = 0;
+        }
+        game_over = false;
+    }
+
     private void LateUpdate()
     {
         //set some stats
@@ -106,7 +153,7 @@ public class MasterMind : MonoBehaviour {
     }
     //1.) @@@@@@   SPIKES   @@@@@@
     #region
-    public float getWhiteMovementRate()
+    private void calculateWhiteMovementRate()
     {
         float dF = 7f / 4f;
         float oldRate = VO_rate;
@@ -121,9 +168,10 @@ public class MasterMind : MonoBehaviour {
             VO_rate = Mathf.Lerp(oldRate, newRate, .2f);
 
         }
-        else if (newRate * 6f  / dF < oldRate)
+        else if (newRate * 6f / dF < oldRate)
         {
             Debug.Log("PLAYER GOD slowing");
+            //myAreaOfFocus.GetComponent<Area_Of_Focus>().setChoice(UnityEngine.Random.Range(0, 3));
             VO_rate = Mathf.Lerp(oldRate, newRate, 1f);
 
         }
@@ -136,6 +184,9 @@ public class MasterMind : MonoBehaviour {
         {
             VO_rate = Mathf.Lerp(oldRate, newRate, .5f);
         }
+    }
+    public float getWhiteMovementRate()
+    {
         return VO_rate;
     }
     public int getNumSpikes()
@@ -153,7 +204,7 @@ public class MasterMind : MonoBehaviour {
         {
             //Debug.Log(Scale);
         }
-        newNumSpikes = 5 + Scale * 25f * musicManager.GetComponent<MusicTest>().getIntensity();
+        newNumSpikes = 5 + Scale * 20f * musicManager.GetComponent<MusicTest>().getIntensity();
         float bassBoostCount = Scale * 40f * musicManager.GetComponent<MusicTest>().getBass();
         newNumSpikes += bassBoostCount; //add a weight for bass
         Intensity[0] = newNumSpikes;
@@ -189,6 +240,33 @@ public class MasterMind : MonoBehaviour {
         }
         oldNumSpikes = newNumSpikes;
         return (int) newNumSpikes;
+    }
+    public float getAreaOfFocusScale()
+    {
+        float previous = areaOfFocusXScale;
+        float current = 3f + 4f * musicManager.GetComponent<MusicTest>().getIntensity();
+        if (current > 6)
+        {
+            current = 8.88f*2; //lerp towards max!
+            areaOfFocusXScale = Mathf.Lerp(previous, current, .1f); //lerp faster speed!
+            return areaOfFocusXScale;
+        }
+        if (current < previous && previous > 6)
+        {
+            if (timeWithinThresholdAOF > 5f)
+            {
+                timeWithinThresholdAOF = 0;
+            }
+            else
+            {
+                timeWithinThresholdAOF += Time.deltaTime;
+                return previous; //do nothing this time
+            }
+            
+        }
+        
+        areaOfFocusXScale = Mathf.Lerp(previous, current, .01f);
+        return areaOfFocusXScale;
     }
     #endregion
     //2.) @@@@@@   PLAYER   @@@@@@
@@ -292,5 +370,12 @@ public class MasterMind : MonoBehaviour {
         Stats.NumPowCollected = numPowCollected;
     }
 
+    #endregion
+    //5.) @@@@@@ MANAGEMENT @@@@@@
+    public bool get_game_over_check()
+    {
+        return game_over;
+    }
+    #region
     #endregion
 }

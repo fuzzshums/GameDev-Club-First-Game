@@ -105,18 +105,21 @@ public class MusicTest : MonoBehaviour {
 
         VO_tempScale = _sumScale;
         VO_tempScale = _sumScale / (1 + sum*8);
+        //VO_tempScale = check_value(-sum*1000, 1000, -500);
+        
         if (useTemp)
         {
-            _VO_maxScale = _baseScale + VO_tempScale * sum;
+            _VO_maxScale = _baseScale + VO_tempScale * sum; // + 
+            //_VO_maxScale = _baseScale + VO_tempScale; //no point in reusing sum?
         }
         else
         {
-            _VO_maxScale = _baseScale + _sumScale * sum;
+            _VO_maxScale = _baseScale + _sumScale * sum; // + 1000 * sum
         }
         //_VO_maxScale = 2000 + sum*500;
 
         //How fast to lerp between points?
-        float march4change = 10;
+        float march4change = 12;
         lerpRate = .3f / (sum*march4change);
         float dampeningLerpRate = .3f / (sum*march4change);
         if (dampening == false)
@@ -270,6 +273,19 @@ public class MusicTest : MonoBehaviour {
     public float getBass()
     {
         return bass;
+    }
+
+    public float check_value(float value, float max, float min)
+    {
+        if (value > max)
+        {
+            value = max;
+        }
+        else if (value < min)
+        {
+            value = min;
+        }
+        return value;
     }
 }
 
