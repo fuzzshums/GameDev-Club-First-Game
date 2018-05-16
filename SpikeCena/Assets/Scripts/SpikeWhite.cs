@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpikeWhite : MonoBehaviour {
 
     public float rate;
-    public GameObject areaOfFocus;
+    public GameObject AoF_Manager;
     GameObject myMasterMind;
     float specialBoost;
 
@@ -47,9 +47,9 @@ public class SpikeWhite : MonoBehaviour {
         float xPos;
         if (chance < 7)
         {
-            middle_of_object = areaOfFocus.GetComponent<Area_Of_Focus>().getPosition();
-            //Debug.Log(middle_of_object);
-            float side_Range = areaOfFocus.GetComponent<Area_Of_Focus>().getScale()/2;
+            middle_of_object = AoF_Manager.GetComponent<AoF_Manager>().chooseAOF();
+            float side_Range = AoF_Manager.GetComponent<AoF_Manager>().chooseAOF2(); // AOFs[value].GetComponent<Area_Of_Focus>().getScale()/2; //AoF_Manager.GetComponent<AoF_Manager>().choose_AoF().GetComponent<Area_Of_Focus>().getScale()/2;
+
             xPos = UnityEngine.Random.Range(middle_of_object - side_Range, middle_of_object + side_Range);
             specialBoost = 1.25f;
         }

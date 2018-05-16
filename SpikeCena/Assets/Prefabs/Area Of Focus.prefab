@@ -53,6 +53,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myPlayer: {fileID: 0}
+  myMasterMind: {fileID: 0}
 --- !u!212 &212983867943515914
 SpriteRenderer:
   m_ObjectHideFlags: 1

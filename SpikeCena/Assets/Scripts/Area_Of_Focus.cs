@@ -18,7 +18,8 @@ public class Area_Of_Focus : MonoBehaviour {
 	void Start () {
 		myPlayer = GameObject.Find("Player");
         myMasterMind = GameObject.Find("Master Mind");
-        direction = "left";
+
+        choose_direction();
         timeSwitch = 0;
         interval = 12;
         choice = 0;
@@ -28,56 +29,39 @@ public class Area_Of_Focus : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        timeSwitch += Time.deltaTime;
-        if (timeSwitch > interval)
-        {
-            Debug.Log("Switching AoF action!");
-            timeSwitch = 0;
-            choice = UnityEngine.Random.Range(0, 3);
-            if (choice == 1)
-            {
-                directionTimeSwitch = 0;
-            }
-        }
-        decide_action(choice);
+
     }
 
-    void decide_action(int choice)
+    void choose_direction()
     {
-        if (choice == 0)
+        int temp_direction = UnityEngine.Random.Range(0, 2);
+        if (temp_direction == 0)
         {
-            follow_player();
+            direction = "right";
         }
-        else if (choice == 1)
+        else
         {
-            move_freely();
-        }
-        else if (choice == 2)
-        {
-            full_screen();
+            direction = "left";
         }
     }
 
-    void move_freely()
+    public void hide()
+    {
+        this.transform.position = new Vector3(this.transform.position.x, -5, this.transform.position.z);
+    }
+
+    public void move_freely(float scale)
     {
         directionTimeSwitch += Time.deltaTime;
         if (directionTimeSwitch > directionInterval) {
             directionTimeSwitch = 0;
-            int temp_direction = UnityEngine.Random.Range(0, 2);
-            if (temp_direction == 0)
-            {
-                direction = "right";
-            }
-            else
-            {
-                direction = "left";
-            }
+            choose_direction();
         }
 
         if (direction == "left")
         {
             xPos = this.transform.position.x - .75f * Time.deltaTime * myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate();
-            xScale = 6;
+            xScale = scale;
             if (xPos - xScale/2 < -8.88f) // < bounds
             {
                 Debug.Log("Bound detected!");
@@ -89,7 +73,7 @@ public class Area_Of_Focus : MonoBehaviour {
         else if (direction == "right")
         {
             xPos = this.transform.position.x + .5f * Time.deltaTime  * myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate();
-            xScale = 6;
+            xScale = scale;
             if (xPos + xScale/2 > 8.88f) // < bounds
             {
                 Debug.Log("Bound detected!");
@@ -99,7 +83,7 @@ public class Area_Of_Focus : MonoBehaviour {
             this.transform.position = new Vector3(xPos, this.transform.position.y, this.transform.position.z);
         }
     }
-    void full_screen()
+    public void full_screen()
     {
         float currentXPos = this.transform.position.x;
         xPos = Mathf.Lerp(currentXPos, 0, .1f);
@@ -109,7 +93,7 @@ public class Area_Of_Focus : MonoBehaviour {
         this.transform.localScale = new Vector2(xScale, this.transform.localScale.y);
     }
 
-    void follow_player()
+    public void follow_player()
     {
         float currentX = this.transform.position.x;
         float playerX = myPlayer.transform.position.x;
