@@ -198,7 +198,7 @@ Prefab:
         type: 2}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: 52164a6823d01f74095f6af8ac24488f, type: 3}
+      objectReference: {fileID: 8300000, guid: 98e07306aa984904e802d477dc7e3919, type: 3}
     - target: {fileID: 114025280872696348, guid: bca73b175fbe8a744acd67762738d922,
         type: 2}
       propertyPath: _baseScale
@@ -599,6 +599,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cce4aff15828eb48b5e3af7ac992717, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  myMasterMind: {fileID: 307315794}
   myPlayer: {fileID: 1017563398667598, guid: 6c58c935ba0ce2d48a747a3ff232b4da, type: 2}
   spikeList:
   - {fileID: 1220939429409694, guid: df9623febab0f0441a4d55486321848b, type: 2}
@@ -613,6 +614,11 @@ Transform:
   m_PrefabParentObject: {fileID: 4795620084815544, guid: 42c55b41f6adaee47af04ef769d4de2e,
     type: 2}
   m_PrefabInternal: {fileID: 675424218}
+--- !u!1 &307315794 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1792278845969002, guid: f6e92380422f41547a074ed5d5415e32,
+    type: 2}
+  m_PrefabInternal: {fileID: 1274514913}
 --- !u!1 &516761210 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1762154540922876, guid: 32a838218a0e8a141874657c837d2c5f,

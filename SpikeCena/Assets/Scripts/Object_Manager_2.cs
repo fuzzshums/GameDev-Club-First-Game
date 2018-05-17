@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 public class Object_Manager_2 : MonoBehaviour
 {
-    GameObject myMasterMind;
+    public GameObject myMasterMind;
     public GameObject myPlayer;
     //These are lists the Unity user will fill with game objects
     public List<GameObject> spikeList;
@@ -49,9 +50,20 @@ public class Object_Manager_2 : MonoBehaviour
         clearOldObjects();
         manageNumSpikes();
         mmScript.setMaxSpawned(numActive);
+        check_over();
     }
 
-  
+    void check_over() //TODO move this out of player!
+    {
+        bool game_over = myMasterMind.GetComponent<MasterMind>().get_game_over_check();
+        //Debug.Log(game_over);
+        if (game_over)
+        {
+            myMasterMind.GetComponent<MasterMind>().finalizeStats();
+            SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
+        }
+    }
+
     void clearOldObjects()
     {
         //TODO bullets

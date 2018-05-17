@@ -58,9 +58,11 @@ public class Area_Of_Focus : MonoBehaviour {
             choose_direction();
         }
 
+        float speed = .5f;
+
         if (direction == "left")
         {
-            xPos = this.transform.position.x - .75f * Time.deltaTime * myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate();
+            xPos = this.transform.position.x - speed * Time.deltaTime * myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate();
             xScale = scale;
             if (xPos - xScale/2 < -8.88f) // < bounds
             {
@@ -72,7 +74,7 @@ public class Area_Of_Focus : MonoBehaviour {
         }
         else if (direction == "right")
         {
-            xPos = this.transform.position.x + .5f * Time.deltaTime  * myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate();
+            xPos = this.transform.position.x + speed * Time.deltaTime  * myMasterMind.GetComponent<MasterMind>().getWhiteMovementRate();
             xScale = scale;
             if (xPos + xScale/2 > 8.88f) // < bounds
             {

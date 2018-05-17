@@ -74,7 +74,7 @@ public class MasterMind : MonoBehaviour {
 
     //management
     static public bool game_over;
-    float silence_timer;
+    static public float silence_timer;
 
     // Use this for initialization
     void Start () {
@@ -127,10 +127,12 @@ public class MasterMind : MonoBehaviour {
 
     void check_game_over()
     {
-        if (musicManager.GetComponent<MusicTest>().getIntensity() == 0)
+        float value = musicManager.GetComponent<MusicTest>().getIntensity();
+        //Debug.Log(value);
+        if (musicManager.GetComponent<MusicTest>().getIntensity() < .00002563369f)
         {
             silence_timer += Time.deltaTime;
-            if (silence_timer > 15)
+            if (silence_timer > 10)
             {
                 Debug.Log("GAME OVER!");
                 game_over = true;
@@ -139,8 +141,9 @@ public class MasterMind : MonoBehaviour {
         else
         {
             silence_timer = 0;
+            game_over = false;
         }
-        game_over = false;
+        
     }
 
     private void LateUpdate()
