@@ -7,10 +7,9 @@ using UnityEngine.UI;
 //It will have getters that every other class can call to find out info.
 //Everything communicates through mastermind.
 
-// Win condition @ end of song fix
 // Music can be added by player - explore the asset
 // Ui cleaned up
-// finish the area of focus. - visual adjustments - maybe option to disable
+// visual adjustments - maybe option to disable
 // sprites?
 // Particles  * could be impossible to add
 // Credits! Options / pause difficulty!
