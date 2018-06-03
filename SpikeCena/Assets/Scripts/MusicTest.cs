@@ -7,6 +7,7 @@ public class MusicTest : MonoBehaviour {
     public GameObject objectPrefab;
     public GameObject objectPrefab2;
     public GameObject backgroundPrefab;
+    public GameObject myMasterMind;
     public float spawnThreshold = 0.5f;
     public int frequency;
     public FFTWindow fftWindow;
@@ -82,6 +83,7 @@ public class MusicTest : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
         AudioListener.GetSpectrumData(samples, 0, fftWindow);
         bass = 0;
         for (int i = 0; i < bass_count; i++)

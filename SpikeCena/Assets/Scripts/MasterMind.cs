@@ -7,7 +7,6 @@ using UnityEngine.UI;
 //It will have getters that every other class can call to find out info.
 //Everything communicates through mastermind.
 
-// Music can be added by player - explore the asset
 // Ui cleaned up
 // visual adjustments - maybe option to disable
 // sprites?
@@ -61,6 +60,7 @@ public class MasterMind : MonoBehaviour {
     int health = 0;
     public Text ammoText;
     int ammo = 0;
+    public Text pauseText;
 
     //stats
     private int totalDamage;
@@ -74,6 +74,7 @@ public class MasterMind : MonoBehaviour {
     //management
     static public bool game_over;
     static public float silence_timer;
+    public bool isPaused;
 
     // Use this for initialization
     void Start () {
@@ -97,6 +98,7 @@ public class MasterMind : MonoBehaviour {
         scoreText.text = "Score: " + 0;
 
         //stat init
+        Stats.SongEnded = false;
         health = s_player.health;
         numHits = 0;
         numSpawned = 0;
@@ -108,6 +110,12 @@ public class MasterMind : MonoBehaviour {
         //management
         game_over = false;
         silence_timer = 0;
+        isPaused = false; 
+
+        //UI init
+        healthText.text = "Health: " + displayAmount(health, false);
+        ammoText.text = "Ammo: " + displayAmount(ammo, true);
+        pauseText.text = "";
     }
 
     // Update is called once per frame
@@ -117,8 +125,6 @@ public class MasterMind : MonoBehaviour {
         timeText.text = "Seconds Alive: " + ((int)time).ToString();
         int s = (int)(score + time);
         scoreText.text = "Score: " + s.ToString();
-        //healthText.text = "Health: " + displayAmount(health, false);
-        //ammoText.text = "Ammo: " + displayAmount(ammo, true);
         calculateWhiteMovementRate();
         check_game_over();
         
@@ -134,6 +140,7 @@ public class MasterMind : MonoBehaviour {
             if (silence_timer > 10)
             {
                 Debug.Log("GAME OVER!");
+                Stats.SongEnded = true;
                 game_over = true;
             }
         }
@@ -283,42 +290,15 @@ public class MasterMind : MonoBehaviour {
     #region
     private string displayAmount(int n, bool k)
     {
-        if (!k && n > 10)
+        if ((n > 10 && !k) || n > 20)
         {
-            return " a lot";
+            return " x" + n;
         }
         string amount = "";
-        if (n <= maxBullets)
-        {
-            if (n <= 10)
-            {
-                for (int i = 0; i < n; i++)
-                {
-                    amount = amount + "|";
-                }
-            }
-            else
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    amount = amount + "|";
-                }
-                amount = amount + " x" + (n - 10);
-            }
-        }
-        /*
         for (int i = 0; i < n; i++)
         {
-            if (i % 10 == 0 && i >= 10 && k)
-            {
-                amount = amount + " x" + (n-10);
-            }
-            else
-            {
-                amount = amount + "|";
-            }
+            amount = amount + "|";
         }
-       */
         return amount;
     }
     public void increaseAmmo()
@@ -378,6 +358,25 @@ public class MasterMind : MonoBehaviour {
     {
         return game_over;
     }
+
+    public void pause()
+    {
+        if (isPaused)
+        {
+            Time.timeScale = 1;
+            isPaused = false;
+            AudioListener.pause = false;
+            pauseText.text = "";
+        }
+        else
+        {
+            Time.timeScale = 0;
+            isPaused = true;
+            AudioListener.pause = true;
+            pauseText.text = "PAUSED";
+        }
+    }
+
     #region
     #endregion
 }

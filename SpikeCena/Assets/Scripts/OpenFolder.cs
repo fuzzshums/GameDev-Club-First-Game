@@ -14,7 +14,6 @@ using System.Text;
 // score vs. health
 // power up -> ammo
 // UI ammo  & song over screen
-// put score in the stats!!!!
 
 public class OpenFolder : MonoBehaviour
 {
@@ -28,10 +27,10 @@ public class OpenFolder : MonoBehaviour
     void Start()
     {
         musicManager = GameObject.Find("Music Master");
-        /* @@@@@@@@@@@@@@ - COMMENTED OUT START
+        //@@@@@@@@@@@@@@ - COMMENTED OUT START
         // ############ GATHER USER AUDIO DATA STRINGS ############
         //string path = Application.dataPath;
-        string path = "D:/TestAudio";
+        string path = "C:/Users/frogm/Downloads";
         Debug.Log(path);
         string[] A = Directory.GetFiles(path, "*.wav", SearchOption.AllDirectories);
 
@@ -46,7 +45,7 @@ public class OpenFolder : MonoBehaviour
             Debug.Log(A[i]);
 
         }
-        */ // @@@@@@@@@@@@@@@@@@ - COMMENTED OUT END
+        // @@@@@@@@@@@@@@@@@@ - COMMENTED OUT END
     }
 
     // Update is called once per frame

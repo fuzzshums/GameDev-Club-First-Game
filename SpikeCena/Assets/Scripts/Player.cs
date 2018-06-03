@@ -74,20 +74,27 @@ public class Player : MonoBehaviour {
         {
             playerVelocity.Set(0, 0);
         }
-        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.I)) && bulletCount > 0) //NOTE: removed space for hotkey max view window
+        if ((Input.GetMouseButtonDown(0)) && bulletCount > 0) 
         {
-            if (currentBullet == 0)
-            {
-                var targetPos = Input.mousePosition;
-                targetPos = Camera.main.ScreenToWorldPoint(targetPos);
-                objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(currentBullet, targetPos);
-            }
-            else
-            {
-                objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(currentBullet, Input.mousePosition);
-            }
+            objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(0, Input.mousePosition);
             myMasterMind.GetComponent<MasterMind>().decreaseAmmo();
             bulletCount--;
+        }
+        if ((Input.GetMouseButtonDown(1)) && bulletCount > 0)
+        {
+            objectManager.GetComponent<Object_Manager_2>().fireFreeBullet(1, Input.mousePosition);
+            myMasterMind.GetComponent<MasterMind>().decreaseAmmo();
+            bulletCount--;
+        }
+        if (Input.GetKeyDown("p")) 
+        {
+            myMasterMind.GetComponent<MasterMind>().pause();
+
+        }
+        if (Input.GetKeyDown("escape"))
+        {
+            myMasterMind.GetComponent<MasterMind>().finalizeStats();
+            SceneManager.LoadScene("GameOver", LoadSceneMode.Single);
         }
     }
    
@@ -103,19 +110,7 @@ public class Player : MonoBehaviour {
     {
         if (other.gameObject.tag == "Spike")
         {
-            /*
-            Spike spikeBehavior = other.gameObject.GetComponent<Spike>();
-            health -= spikeBehavior.GetDamage();
-            Debug.Log("" + health);
-            if(health <= 0)
-            {
-                Die();
-            }
-            StartCoroutine(OnDamage());
-            other.gameObject.GetComponent<Spike>().Die();
-            */
             other.gameObject.GetComponent<SpikeWhite>().resetPos();
-            //Damage is inputted as a positive number
             myMasterMind.GetComponent<MasterMind>().modifyHealth(-1);
             myMasterMind.GetComponent<MasterMind>().modifyScore(damagePenalty);
             health--;
@@ -131,19 +126,13 @@ public class Player : MonoBehaviour {
             other.gameObject.GetComponent<Powerup>().transform.position = new Vector2(-10f, -10f);
             myMasterMind.GetComponent<MasterMind>().modifyScore(powerupPoints);
             mmScript.increasePowPickedUp();
-            if (Random.value > 0.5)
-            {
-                currentBullet = 1;
-            }
-            else
-            {
-                currentBullet = 0;
-            }
+
             if (bulletCount + 10 <= 50)
             {
                 bulletCount += 10;
                 mmScript.increaseAmmo();
             }
+
             yield return new WaitForSeconds(5);
             other.gameObject.GetComponent<Powerup>().randomizePos(); 
         }

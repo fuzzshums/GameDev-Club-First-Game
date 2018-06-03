@@ -6,6 +6,19 @@ public static class Stats
 {
     private static int score, numHits, numSpawned, maxSpikeSpawn, totalSpikesSpawned, numPowCollected;
     private static float hitRatio;
+    private static bool songEnded;
+
+    public static bool SongEnded
+    {
+        get
+        {
+            return songEnded;
+        }
+        set
+        {
+            songEnded = value;
+        }
+    }
 
     public static int Score
     {
