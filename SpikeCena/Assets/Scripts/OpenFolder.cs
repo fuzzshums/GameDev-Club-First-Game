@@ -20,10 +20,13 @@ public class OpenFolder : MonoBehaviour
 {
 
     public InputField userText;
+   // public Text displayText;
+    public GameObject ButtonPrefab;
+    public GameObject canvasParent;
 
+    public string magicString;
     void Start()
     {
-
 
     }
 
@@ -38,10 +41,31 @@ public class OpenFolder : MonoBehaviour
         if (Input.GetKeyDown("return"))
         {
             string path = userText.text;
+            //displayText.text = "";
+            int counter = 0;
             foreach (string file in System.IO.Directory.GetFiles(path))
             {
-                Debug.Log(file);
+                //Debug.Log(file);
+                GameObject sample = Instantiate(ButtonPrefab);
+                sample.transform.SetParent(canvasParent.transform, false);
+                Vector2 newPos = sample.transform.position;
+                newPos.y -= 75*(counter+1);
+                sample.transform.position = newPos;
+                sample.GetComponentInChildren<Text>().text = shortenfile(path,file);
+                sample.GetComponent<Button>().onClick.AddListener(() => rememberName(file));
+                counter += 1;
             }
         }
+    }
+
+    string shortenfile(string path, string file)
+    {
+        return file.Replace(path, "");
+    }
+
+    void rememberName(string file)
+    {
+        magicString = file;
+        DontDestroyOnLoad(this.gameObject);
     }
 }

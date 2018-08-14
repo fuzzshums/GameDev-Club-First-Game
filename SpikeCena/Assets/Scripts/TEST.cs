@@ -9,7 +9,7 @@ public class TEST : MonoBehaviour {
         // Get the AudioSource we want to use to play our AudioClip.
         var source = this.GetComponent<AudioSource>();
         // Load an AudioClip from the streaming assets folder into our source.
-        string path = "D:\\UnityAudioTest\\Test.wav";
+        string path = GameObject.Find("OpenFolder").GetComponent<OpenFolder>().magicString;
         source.clip = ES3.LoadAudio(path);
         // Play the AudioClip we just loaded using our AudioSource.
         source.Play();
