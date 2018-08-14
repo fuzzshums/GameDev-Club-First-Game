@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 //using UnityEditor;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using System;
-using System.Text;
+using UnityEngine.UI;
 
 //todo bullet counter
 //todo song_over bool
@@ -17,40 +18,30 @@ using System.Text;
 
 public class OpenFolder : MonoBehaviour
 {
-    // https://docs.unity3d.com/ScriptReference/Path.GetFileName.html
 
-    //https://answers.unity.com/questions/1381625/why-was-wwwaudioclip-removed.html
-    //https://docs.unity3d.com/ScriptReference/Networking.UnityWebRequestMultimedia.GetAudioClip.html
-    //https://answers.unity.com/questions/737002/wav-byte-to-audioclip.html
-    GameObject musicManager;
+    public InputField userText;
 
     void Start()
     {
-        musicManager = GameObject.Find("Music Master");
-        //@@@@@@@@@@@@@@ - COMMENTED OUT START
-        // ############ GATHER USER AUDIO DATA STRINGS ############
-        //string path = Application.dataPath;
-        string path = "C:/Users/frogm/Downloads";
-        Debug.Log(path);
-        string[] A = Directory.GetFiles(path, "*.wav", SearchOption.AllDirectories);
 
-        for (int i = 0; i < 1; i++)
-        {
-            A[i] = A[i].Replace("/", "\\");
-            var source = this.GetComponent<AudioSource>();
-            // Load an AudioClip from the streaming assets folder into our source.
-            source.clip = ES3.LoadAudio(A[i]);
-            // Play the AudioClip we just loaded using our AudioSource.
-            source.Play();
-            Debug.Log(A[i]);
 
-        }
-        // @@@@@@@@@@@@@@@@@@ - COMMENTED OUT END
     }
 
     // Update is called once per frame
     void Update()
     {
+        updateUserPressedEnter();
+    }
 
+    void updateUserPressedEnter()
+    {
+        if (Input.GetKeyDown("return"))
+        {
+            string path = userText.text;
+            foreach (string file in System.IO.Directory.GetFiles(path))
+            {
+                Debug.Log(file);
+            }
+        }
     }
 }
