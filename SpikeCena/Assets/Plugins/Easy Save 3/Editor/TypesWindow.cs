@@ -8,6 +8,7 @@ using System.Linq;
 using ES3Types;
 using System.IO;
 using ES3Internal;
+using System.Text.RegularExpressions;
 
 namespace ES3Editor
 {
@@ -637,7 +638,9 @@ namespace ES3Editor
 			// If it's a generic type, replace syntax with angled brackets.
 			int genericArgumentCount = type.GetGenericArguments().Length;
 			if(genericArgumentCount > 0)
-				typeName = typeName.Replace("`"+genericArgumentCount+"[","<").Replace("]",">");
+			{
+				return string.Format("{0}<{1}>", type.ToString().Split('`')[0], string.Join(", ", type.GetGenericArguments().Select(x => GetFullTypeName(x)).ToArray()));
+			}
 
 			return typeName;
 		}

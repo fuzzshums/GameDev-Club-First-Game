@@ -30,13 +30,22 @@ namespace ES3Internal
 				if(_assemblies == null) 
 				{
 					var assemblyNames = new ES3Settings().assemblyNames;
-					_assemblies = new Assembly[assemblyNames.Length];
+					var assemblyList = new List<Assembly>();
+
 					for(int i=0; i<assemblyNames.Length; i++)
 					{
-						_assemblies[i] = Assembly.Load(new AssemblyName(assemblyNames[i]));
-						if(_assemblies[i] == null)
-							throw new ArgumentException("Assembly \""+assemblyNames[i]+"\" could not be found");
+						try
+						{
+							var assembly = Assembly.Load(new AssemblyName(assemblyNames[i]));
+							if(assembly != null)
+								assemblyList.Add(assembly);
+						}
+						catch
+						{
+							Debug.LogWarning("Assembly \""+assemblyNames[i]+"\" could not be found. If you are using Assembly Definition Files, you should delete this assembly from the \"Assemblies containing ES3Types\" list in Window > Easy Save 3 > Settings, and add the names of the Assemblies you are using instead.");
+						}
 					}
+					_assemblies = assemblyList.ToArray();
 				}
 				return _assemblies;
 			}

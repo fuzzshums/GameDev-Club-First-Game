@@ -73,6 +73,8 @@ namespace ES3Internal
 					es3Type = new ES3QueueType(type);
 				else if(genericType == typeof(Stack<>))
 					es3Type = new ES3StackType(type);
+				else if(genericType == typeof(HashSet<>))
+					es3Type = new ES3HashSetType(type);
 				else if(throwException)
 					throw new NotSupportedException("Generic type \""+type.ToString()+"\" is not supported by Easy Save.");
 				else

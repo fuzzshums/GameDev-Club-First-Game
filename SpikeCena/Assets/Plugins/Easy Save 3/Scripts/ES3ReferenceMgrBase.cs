@@ -133,39 +133,6 @@ namespace ES3Internal
 			//refId[obj] = id;
 		}
 
-		/*public void AddOrUpdate(UnityEngine.Object obj, long id)
-		{
-			long existingId = Get(obj);
-
-			// If there's not an existing ID, we're adding a new object.
-			if(existingId == -1)
-			{
-				// If an id wasn't specified, add the object with a new ID.
-				if(id == -1)
-					Add(obj, GetNewRefID());
-				// If an object already exists with this id, do not add the object.
-				else if(Get(id) == null)
-					Add(obj, GetNewRefID);
-			}
-			// Else we're updating an existing object.
-			else
-			{
-				var existingObj = Get(existingId);
-
-			}
-
-			// If there's an existing id and one wasn't specified as as parameter, use the existing id.
-			if(existingId != -1 && id == -1)
-				id = existingId;
-			// If there's not an existing id and one wasn't specified as a parameter, generate a new id.
-			else if(existingId == -1 && id == -1)
-				id = GetNewRefID();
-
-			// Add the reference to the Dictionary.
-			idRef[id] = obj;
-			//refId[obj] = id;
-		}*/
-
 		public void AddPrefab(ES3Prefab prefab)
 		{
 			if(!prefabs.Contains(prefab))
@@ -228,23 +195,6 @@ namespace ES3Internal
 		protected override bool ValuesAreEqual(UnityEngine.Object a, UnityEngine.Object b)
 		{
 			return a == b;
-		}
-
-		public int RemoveNullValues()
-		{
-			var nullValues = this.Where(pair => pair.Value == null)
-				.Select(pair => pair.Key)
-				.ToList();
-
-			int itemsRemoved = 0;
-
-			foreach (var nullValue in nullValues)
-			{
-				itemsRemoved++;
-				this.Remove(nullValue);
-			}
-
-			return itemsRemoved;
 		}
 	}
 

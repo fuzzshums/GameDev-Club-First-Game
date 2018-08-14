@@ -16,7 +16,7 @@ namespace ES3Types
 		public override void Write(object obj, ES3Writer writer)
 		{
 			var instance = (UnityEngine.ParticleSystem.MainModule)obj;
-			
+
 			writer.WriteProperty("duration", instance.duration, ES3Type_float.Instance);
 			writer.WriteProperty("loop", instance.loop, ES3Type_bool.Instance);
 			writer.WriteProperty("prewarm", instance.prewarm, ES3Type_bool.Instance);
@@ -44,7 +44,11 @@ namespace ES3Types
 			writer.WriteProperty("startRotationYMultiplier", instance.startRotationYMultiplier, ES3Type_float.Instance);
 			writer.WriteProperty("startRotationZ", instance.startRotationZ, ES3Type_MinMaxCurve.Instance);
 			writer.WriteProperty("startRotationZMultiplier", instance.startRotationZMultiplier, ES3Type_float.Instance);
+			#if UNITY_2018_1_OR_NEWER
+			writer.WriteProperty("flipRotation", instance.flipRotation, ES3Type_float.Instance);
+			#else
 			writer.WriteProperty("randomizeRotationDirection", instance.randomizeRotationDirection, ES3Type_float.Instance);
+			#endif
 			writer.WriteProperty("startColor", instance.startColor, ES3Type_MinMaxGradient.Instance);
 			writer.WriteProperty("gravityModifier", instance.gravityModifier, ES3Type_MinMaxCurve.Instance);
 			writer.WriteProperty("gravityModifierMultiplier", instance.gravityModifierMultiplier, ES3Type_float.Instance);
@@ -152,9 +156,18 @@ namespace ES3Types
 					case "startRotationZMultiplier":
 						instance.startRotationZMultiplier = reader.Read<System.Single>(ES3Type_float.Instance);
 						break;
+						#if UNITY_2018_1_OR_NEWER
+						case "flipRotation":
+						instance.flipRotation = reader.Read<System.Single>(ES3Type_float.Instance);
+						break;
+						case "randomizeRotationDirection":
+						instance.flipRotation = reader.Read<System.Single>(ES3Type_float.Instance);
+						break;
+						#else
 					case "randomizeRotationDirection":
 						instance.randomizeRotationDirection = reader.Read<System.Single>(ES3Type_float.Instance);
 						break;
+						#endif
 					case "startColor":
 						instance.startColor = reader.Read<UnityEngine.ParticleSystem.MinMaxGradient>(ES3Type_MinMaxGradient.Instance);
 						break;

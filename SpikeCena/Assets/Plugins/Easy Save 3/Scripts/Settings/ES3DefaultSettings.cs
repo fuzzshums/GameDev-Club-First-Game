@@ -8,5 +8,6 @@ namespace ES3Internal
 		public ES3SerializableSettings settings = null;
 
 		public bool addMgrToSceneAutomatically = true;
+		public bool autoUpdateReferences = true;
 	}
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System;
 using UnityEngine;
 using System.Text;
+using System.Globalization;
 
 namespace ES3Internal
 {
@@ -24,10 +25,10 @@ namespace ES3Internal
 		#region WritePrimitive(value) methods.
 
 		internal override void WritePrimitive(int value)		{ baseWriter.Write(value); }
-		internal override void WritePrimitive(float value)	{ baseWriter.Write(value); }
+		internal override void WritePrimitive(float value)	{ baseWriter.Write(value.ToString(CultureInfo.InvariantCulture)); }
 		internal override void WritePrimitive(bool value)		{ baseWriter.Write(value ? "true" : "false"); }
-		internal override void WritePrimitive(decimal value)	{ baseWriter.Write(value); }
-		internal override void WritePrimitive(double value)	{ baseWriter.Write(value); }
+		internal override void WritePrimitive(decimal value)	{ baseWriter.Write(value.ToString(CultureInfo.InvariantCulture)); }
+		internal override void WritePrimitive(double value)	{ baseWriter.Write(value.ToString(CultureInfo.InvariantCulture)); }
 		internal override void WritePrimitive(long value)		{ baseWriter.Write(value); }
 		internal override void WritePrimitive(ulong value)	{ baseWriter.Write(value); }
 		internal override void WritePrimitive(uint value)		{ baseWriter.Write(value); }

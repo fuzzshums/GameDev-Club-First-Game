@@ -1376,6 +1376,37 @@ namespace HutongGames.PlayMaker.Actions
 	}
 
 	[ActionCategory("Easy Save 2")]
+	public class SaveEnum : ES2SaveAction
+	{
+		[RequiredField]
+		[Tooltip("The data we want to save.")]
+		public FsmEnum saveValue;
+
+		public override void Reset()
+		{
+			saveValue = null;
+			base.Reset (); // Ensure that base.Reset() is called when done.
+		}
+
+		public override void OnEnter()
+		{
+			try
+			{
+				ES2.Save<int>(System.Convert.ToInt32(saveValue.Value), filename.Value, GetSettings(new ES2Settings()));
+				base.OnEnter(); // Ensure that base.OnEnter() is called when done.
+			}
+			catch(System.Exception e)
+			{
+				if(ifError != null)
+				{
+					LogError(e.Message);
+					Fsm.Event(ifError);
+				}
+			}
+		}
+	}
+
+	[ActionCategory("Easy Save 2")]
 	public class SaveColor : ES2SaveAction
 	{
 		[RequiredField]
@@ -2421,6 +2452,37 @@ namespace HutongGames.PlayMaker.Actions
 			try
 			{
 				loadValue.Value = ES2.Load<Vector3>(filename.Value, GetSettings(new ES2Settings()));
+				base.OnEnter(); // Ensure that base.OnEnter() is called when done.
+			}
+			catch(System.Exception e)
+			{
+				if(ifError != null)
+				{
+					LogError(e.Message);
+					Fsm.Event(ifError);
+				}
+			}
+		}
+	}
+
+	[ActionCategory("Easy Save 2")]
+	public class LoadEnum : ES2LoadAction
+	{
+		[RequiredField]
+		[Tooltip("The data we we want to load.")]
+		public FsmEnum loadValue;
+
+		public override void Reset()
+		{
+			loadValue = null;
+			base.Reset (); // Ensure that base.Reset() is called when done.
+		}
+
+		public override void OnEnter()
+		{
+			try
+			{
+				loadValue.Value = (System.Enum)Enum.ToObject(loadValue.EnumType, (byte)ES2.Load<int>(filename.Value, GetSettings(new ES2Settings())));
 				base.OnEnter(); // Ensure that base.OnEnter() is called when done.
 			}
 			catch(System.Exception e)

@@ -36,11 +36,17 @@ namespace ES3Editor
 
 			EditorGUILayout.BeginVertical(style.area);
 
-			EditorGUILayout.BeginHorizontal();
 			var wideLabel = new GUIStyle();
 			wideLabel.fixedWidth = 400;
+
+			EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.PrefixLabel("Auto Add Manager to Scene", wideLabel);
 			editorSettings.addMgrToSceneAutomatically = EditorGUILayout.Toggle(editorSettings.addMgrToSceneAutomatically);
+			EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.PrefixLabel("Auto Update References", wideLabel);
+			editorSettings.autoUpdateReferences = EditorGUILayout.Toggle(editorSettings.autoUpdateReferences);
 			EditorGUILayout.EndHorizontal();
 
 			EditorGUILayout.Space();

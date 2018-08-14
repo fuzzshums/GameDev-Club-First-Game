@@ -42,8 +42,10 @@ if(isset($_POST["getFile"]))
 {
 	$stmt = $db->prepare("SELECT $fileDataField FROM $tableName WHERE $filenameField = :filename AND $userField = :user AND $lastUpdatedField > :timestamp LIMIT 1");
 	$stmt->bindParam(":filename", $_POST["getFile"]);
-	$stmt->bindParam(":user", GetPOSTUser());
-	$stmt->bindParam(":timestamp", GetPOSTTimestamp());
+	$postUser = GetPOSTUser();
+	$stmt->bindParam(":user", $postUser);
+	$postTimestamp = GetPOSTTimestamp();
+	$stmt->bindParam(":timestamp", $postTimestamp);
 	$stmt->execute();
 	if($stmt->rowCount() > 0)
 	{
@@ -73,8 +75,10 @@ else if(isset($_POST["putFile"]))
 	$stmt = $db->prepare("INSERT INTO $tableName ($filenameField, $fileDataField, $userField, $lastUpdatedField) VALUES (:filename, :data, :user, :timestamp) ON DUPLICATE KEY UPDATE $fileDataField = VALUES($fileDataField), $lastUpdatedField = VALUES($lastUpdatedField)");
 	$stmt->bindParam(":filename", $_POST["putFile"]);
 	$stmt->bindParam(":data", $fp, PDO::PARAM_LOB);
-	$stmt->bindParam(":user", GetPOSTUser());
-	$stmt->bindParam(":timestamp", GetPOSTTimestamp());
+	$postUser = GetPOSTUser();
+	$stmt->bindParam(":user", $postUser);
+	$postTimestamp = GetPOSTTimestamp();
+	$stmt->bindParam(":timestamp", $postTimestamp);
 
 	$stmt->execute();
 }
@@ -82,9 +86,22 @@ else if(isset($_POST["putFile"]))
 // ----- DELETE FILE -----
 else if(isset($_POST["deleteFile"]))
 {
+	$stmt = $db->prepare("UPDATE $tableName SET $filenameField = :newFilename WHERE $filenameField = :filename");
+	$stmt->bindParam(":filename", $_POST["deleteFile"]);
+	$stmt->bindParam(":newFilename", $_POST["newFilename"]);
+	$postUser = GetPOSTUser();
+	$stmt->bindParam(":user", $postUser);
+	$stmt->execute();
+}
+
+// ----- RENAME FILE -----
+else if(isset($_POST["renameFile"]))
+{
+	
 	$stmt = $db->prepare("DELETE FROM $tableName WHERE $filenameField = :filename AND $userField = :user");
 	$stmt->bindParam(":filename", $_POST["deleteFile"]);
-	$stmt->bindParam(":user", GetPOSTUser());
+	$postUser = GetPOSTUser();
+	$stmt->bindParam(":user", $postUser);
 	$stmt->execute();
 }
 
@@ -92,7 +109,8 @@ else if(isset($_POST["deleteFile"]))
 else if(isset($_POST["getFilenames"]))
 {
 	$stmt = $db->prepare("SELECT GROUP_CONCAT($filenameField SEPARATOR ';') FROM $tableName WHERE $userField = :user");
-	$stmt->bindParam(":user", GetPOSTUser());
+	$postUser = GetPOSTUser();
+	$stmt->bindParam(":user", $postUser);
 	$stmt->execute();
 	if($stmt->rowCount() > 0)
 		echo $stmt->fetchColumn();
@@ -103,7 +121,8 @@ else if(isset($_POST["getTimestamp"]))
 {
 	$stmt = $db->prepare("SELECT $lastUpdatedField FROM $tableName WHERE $filenameField = :filename AND $userField = :user LIMIT 1");
 	$stmt->bindParam(":filename", $_POST["getTimestamp"]);
-	$stmt->bindParam(":user", GetPOSTUser());
+	$postUser = GetPOSTUser();
+	$stmt->bindParam(":user", $postUser);
 	$stmt->execute();
 	if($stmt->rowCount() > 0)
 		echo $stmt->fetchColumn();
@@ -217,10 +236,13 @@ PRIMARY KEY (`$filenameField`,`$userField`)
     	}
     	catch(Exception $e)
     	{
-	    	echo "	<p>Couldn't create PHP file on your server. Server returned the following error:</p><p>".$e->getMessage()."</p>
-	    			<p>To manually install the PHP file, please create a file named <em>ES3Variables.php</em> in the same directory as your ES3.php file with the following contents:</p>
-					<pre>$phpScript</pre>
-					<p>After creating this file, installation will be complete.</p>";
+	    	ManuallyInstall($phpScript);
+	    	exit();
+    	}
+    	
+    	if(!file_exists("ES3Variables.php"))
+    	{
+	    	ManuallyInstall($phpScript);
 	    	exit();
     	}
     	
@@ -240,6 +262,14 @@ PRIMARY KEY (`$filenameField`,`$userField`)
 		PreInstall();
 		exit();
 	}
+}
+
+function ManuallyInstall($phpScript)
+{
+		    	echo "	<p>Couldn't create PHP file on your server. Server returned the following error:</p><p>".$e->getMessage()."</p>
+	    			<p>To manually install the PHP file, please create a file named <em>ES3Variables.php</em> in the same directory as your ES3.php file with the following contents:</p>
+					<pre>$phpScript</pre>
+					<p>After creating this file, installation will be complete.</p>";
 }
 	
 ?>

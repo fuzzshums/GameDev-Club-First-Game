@@ -121,6 +121,24 @@ namespace ES3Internal
 			return removedCount;
 		}
 
+		public int RemoveNullValues()
+		{
+			int index = 0;
+			int removedCount = 0;
+			while(index < _Keys.Count)
+			{
+				if(_Values[index] == null)
+				{
+					_Keys.RemoveAt(index);
+					_Values.RemoveAt(index);
+					removedCount++;
+				}
+				else
+					index++;
+			}
+			return removedCount;
+		}
+
 		// Changes the key of a value without changing it's position in the underlying Lists.
 		// Mainly used in the Editor where position might otherwise change while the user is editing it.
 		// Returns true if a change was made.

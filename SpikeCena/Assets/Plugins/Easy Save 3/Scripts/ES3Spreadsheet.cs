@@ -11,31 +11,71 @@ public class ES3Spreadsheet
 	private Dictionary<Index, string> cells = new Dictionary<Index, string>();
 
 	private const string QUOTE = "\"";
+	private const char QUOTE_CHAR = '"';
+	private const char COMMA_CHAR = ',';
+	private const char NEWLINE_CHAR = '\n';
 	private const string ESCAPED_QUOTE = "\"\"";
 	private static char[] CHARS_TO_ESCAPE = { ',', '"', '\n' };
 
+	public int ColumnCount
+	{
+		get{ return cols; }
+	}
+
+	public int RowCount
+	{
+		get{ return rows; }
+	}
+
 	public void SetCell<T>(int col, int row, object value)
 	{
+		// If we're writing a string, add it without formatting.
+		if(typeof(T) == typeof(string))
+		{
+			SetCell(col, row, (string)value);
+			return;
+		}
+
 		var settings = new ES3Settings ();
 		using(var ms = new MemoryStream())
 		{
 			using (var jsonWriter = new ES3JSONWriter (ms, settings, false, false))
 				jsonWriter.Write(value, ES3.ReferenceMode.ByValue);
-			cells [new Index (col, row)] = settings.encoding.GetString(ms.ToArray());
+
+			SetCell(col, row, settings.encoding.GetString(ms.ToArray()));
 		}
 
 		// Expand the spreadsheet if necessary.
-		if((col+1) > cols)
+		if(col >= cols)
 			cols = (col+1);
-		if((row+1) > rows)
+		if(row >= rows)
+			rows = (row+1);
+	}
+
+	private void SetCell(int col, int row, string value)
+	{
+		cells [new Index (col, row)] = value;
+
+		// Expand the spreadsheet if necessary.
+		if(col >= cols)
+			cols = (col+1);
+		if(row >= rows)
 			rows = (row+1);
 	}
 
 	public T GetCell<T>(int col, int row)
 	{
 		string value;
-		if(!cells.TryGetValue(new Index (col, row), out value))
-			throw new KeyNotFoundException("Cell with index ("+ col + " ,"+ row +") was not found.");
+
+		if(col >= cols || row >= rows)
+			throw new System.IndexOutOfRangeException("Cell ("+col+", "+row+") is out of bounds of spreadsheet ("+cols+", "+rows+").");
+
+		if(!cells.TryGetValue(new Index (col, row), out value) || string.IsNullOrEmpty(value))
+			return default(T);
+
+		// IF we're loading a string, simply return the string value.
+		if(typeof(T) == typeof(string))
+			return (T)(object)value;
 
 		var settings = new ES3Settings ();
 		using(var ms = new MemoryStream(settings.encoding.GetBytes(value)))
@@ -43,11 +83,68 @@ public class ES3Spreadsheet
 				return jsonReader.Read<T>();
 	}
 
-	// TODO
-	/*public void Load()
+	public void Load(string filePath)
 	{
-		// Don't forget to unescape strings using Unescape() method when loading!
-	}*/
+		Load(new ES3Settings (filePath));
+	}
+
+	public void Load(string filePath, ES3Settings settings)
+	{
+		Load(new ES3Settings (filePath, settings));
+	}
+
+	public void Load(ES3Settings settings)
+	{
+		using (var reader = new StreamReader (ES3Stream.CreateStream(settings, ES3FileMode.Read)))
+		{
+			int c_int;
+			char c;
+			string value = "";
+			int col = 0;
+			int row = 0;
+
+			// Read until the end of the stream.
+			while(true)
+			{
+				c_int = reader.Read();
+				c = (char)c_int;
+				if(c == QUOTE_CHAR)
+				{
+					while (true)
+					{
+						c = (char)reader.Read();
+
+						if(c == QUOTE_CHAR)
+						{
+							// If this quote isn't escaped by another, it is the last quote, so we should stop parsing this value.
+							if(((char)reader.Peek()) != QUOTE_CHAR)
+								break;
+							else
+								c = (char)reader.Read();
+						}
+						value += c;
+					}
+				}
+				// If this is the end of a column, row, or the stream, add the value to the spreadsheet.
+				else if(c == COMMA_CHAR || c == NEWLINE_CHAR || c_int == -1)
+				{
+					SetCell(col, row, value);
+					value = "";
+					if(c == COMMA_CHAR)
+						col++;
+					else if(c == NEWLINE_CHAR)
+					{
+						col = 0;
+						row++;
+					}
+					else
+						break;
+				}
+				else
+					value += c;
+			}
+		}
+	}
 
 	public void Save(string filePath)
 	{
@@ -78,6 +175,10 @@ public class ES3Spreadsheet
 	{
 		using (var writer = new StreamWriter(ES3Stream.CreateStream(settings, append ? ES3FileMode.Append : ES3FileMode.Write)))
 		{
+			// If data already exists and we're appending, we need to prepend a newline.
+			if(append && ES3.FileExists(settings))
+				writer.Write('\n');
+
 			var array = ToArray();
 			for(int row = 0; row < rows; row++)
 			{
@@ -92,15 +193,20 @@ public class ES3Spreadsheet
 				}
 			}
 		}
-		ES3IO.CommitBackup(settings);
+		if(!append)
+			ES3IO.CommitBackup(settings);
 	}
 
-	private static string Escape(string str)
+	private static string Escape(string str, bool isAlreadyWrappedInQuotes=false)
 	{
-		if(str == null)
+		if(string.IsNullOrEmpty(str))
 			return null;
+
+		// Now escape any other quotes.
 		if(str.Contains(QUOTE))
 			str = str.Replace(QUOTE, ESCAPED_QUOTE);
+		
+		// If there's chars to escape, wrap the value in quotes.
 		if(str.IndexOfAny(CHARS_TO_ESCAPE) > -1)
 			str = QUOTE + str + QUOTE;
 		return str;

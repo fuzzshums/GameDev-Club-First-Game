@@ -5,6 +5,7 @@ using System.IO;
 using System.Text;
 using System;
 using ES3Types;
+using System.Globalization;
 
 namespace ES3Internal
 {
@@ -568,11 +569,11 @@ namespace ES3Internal
 		}
 			
 		internal override char		Read_char()		{ return char.Parse(		Read_string()); 	}
-		internal override float		Read_float()	{ return float.Parse(		GetValueString()); 	}
+		internal override float		Read_float()	{ return float.Parse(		GetValueString(), CultureInfo.InvariantCulture); 	}
 		internal override int 		Read_int()		{ return int.Parse(			GetValueString()); 	}
 		internal override bool 		Read_bool()		{ return bool.Parse(		GetValueString()); 	}
-		internal override decimal 	Read_decimal()	{ return decimal.Parse(		GetValueString()); 	}
-		internal override double 	Read_double()	{ return double.Parse(		GetValueString()); 	}
+		internal override decimal 	Read_decimal()	{ return decimal.Parse(		GetValueString(), CultureInfo.InvariantCulture); 	}
+		internal override double 	Read_double()	{ return double.Parse(		GetValueString(), CultureInfo.InvariantCulture); 	}
 		internal override long 		Read_long()		{ return long.Parse(		GetValueString()); 	}
 		internal override ulong 	Read_ulong()	{ return ulong.Parse(		GetValueString()); 	}
 		internal override uint 		Read_uint()		{ return uint.Parse(		GetValueString()); 	}
@@ -581,7 +582,7 @@ namespace ES3Internal
 		internal override short 	Read_short()	{ return (short)int.Parse(	GetValueString()); 	}
 		internal override ushort 	Read_ushort()	{ return (ushort)int.Parse(	GetValueString()); 	}
 
-		internal override byte[] 	Read_byteArray(){ return System.Convert.FromBase64String(GetValueString()); }
+		internal override byte[] 	Read_byteArray(){ return System.Convert.FromBase64String(Read_string()); }
 
 
 		#endregion

@@ -71,6 +71,12 @@ public class ES3Cloud : ES3WebClass
 
 	#region Sync
 
+	/// <summary>Synchronises the default file with a file on the server. If the file on the server is newer than the local copy, the local file will be overwritten by the file on the server. Otherwise, the file on the server will be overwritten.</summary>
+	public IEnumerator Sync()
+	{
+		return Sync(new ES3Settings(), "", "");
+	}
+
 	/// <summary>Synchronises a local file with a file on the server. If the file on the server is newer than the local copy, the local file will be overwritten by the file on the server. Otherwise, the file on the server will be overwritten.</summary>
 	/// <param name="filePath">The relative or absolute path of the local file we want to synchronise.</param>
 	public IEnumerator Sync(string filePath)
@@ -151,6 +157,12 @@ public class ES3Cloud : ES3WebClass
 
 	#region UploadFile
 
+	/// <summary>Uploads the default file to the server, overwriting any existing file.</summary>
+	public IEnumerator UploadFile()
+	{
+		return UploadFile(new ES3Settings(), "", "");
+	}
+
 	/// <summary>Uploads a local file to the server, overwriting any existing file.</summary>
 	/// <param name="filePath">The relative or absolute path of the file we want to use.</param>
 	public IEnumerator UploadFile(string filePath)
@@ -203,10 +215,39 @@ public class ES3Cloud : ES3WebClass
 	}
 
 	/// <summary>Uploads a local file to the server, overwriting any existing file.</summary>
-	/// <param name="settings">The settings we want to use to override the default settings.</param>
+	/// <param name="es3File">An ES3File containing the data we want to upload.</param>
+	public IEnumerator UploadFile(ES3File es3File)
+	{
+		return UploadFile(es3File.LoadRawBytes(), es3File.settings, "", "");
+	}
+
+	/// <summary>Uploads a local file to the server, overwriting any existing file.</summary>
+	/// <param name="es3File">An ES3File containing the data we want to upload.</param>
+	/// <param name="user">The unique name of the user this file belongs to, if the file isn't globally accessible.</param>
+	public IEnumerator UploadFile(ES3File es3File, string user)
+	{
+		return UploadFile(es3File.LoadRawBytes(), es3File.settings, user, "");
+	}
+
+	/// <summary>Uploads a local file to the server, overwriting any existing file.</summary>
+	/// <param name="es3File">An ES3File containing the data we want to upload.</param>
 	/// <param name="user">The unique name of the user this file belongs to, if the file isn't globally accessible.</param>
 	/// <param name="password">The password of the user this file belongs to.</param>
-	private IEnumerator UploadFile(ES3Settings settings, string user, string password)
+	public IEnumerator UploadFile(ES3File es3File, string user, string password)
+	{
+		return UploadFile(es3File.LoadRawBytes(), es3File.settings, user, password);
+	}
+
+	/// <summary>Uploads a local file to the server, overwriting any existing file.</summary>
+	/// <param name="es3File">An ES3File containing the data we want to upload.</param>
+	/// <param name="user">The unique name of the user this file belongs to, if the file isn't globally accessible.</param>
+	/// <param name="password">The password of the user this file belongs to.</param>
+	public IEnumerator UploadFile(ES3Settings settings, string user, string password)
+	{
+		return UploadFile(ES3.LoadRawBytes(settings), settings, user, password);
+	}
+
+	private IEnumerator UploadFile(byte[] bytes, ES3Settings settings, string user, string password)
 	{
 		Reset();
 
@@ -215,7 +256,7 @@ public class ES3Cloud : ES3WebClass
 		form.AddField("putFile", settings.path);
 		form.AddField("timestamp", DateTimeToUnixTimestamp(ES3.GetTimestamp(settings)).ToString());
 		form.AddField("user", GetUser(user, password));
-		form.AddBinaryData("data", ES3.LoadRawBytes(settings), "data.dat", "multipart/form-data");
+		form.AddBinaryData("data", bytes, "data.dat", "multipart/form-data");
 
 		using(var webRequest = UnityWebRequest.Post(url, form))
 		{
@@ -229,6 +270,12 @@ public class ES3Cloud : ES3WebClass
 	#endregion
 
 	#region DownloadFile
+
+	/// <summary>Downloads the default file from the server and saves it locally, overwriting the existing local default file. An error is returned if the file does not exist.</summary>
+	public IEnumerator DownloadFile()
+	{
+		return DownloadFile(new ES3Settings(), "", "", 0);
+	}
 
 	/// <summary>Downloads a file from the server and saves it locally, overwriting any existing local file. An error is returned if the file does not exist.</summary>
 	/// <param name="filePath">The relative or absolute path of the file we want to download.</param>
@@ -281,6 +328,63 @@ public class ES3Cloud : ES3WebClass
 		return DownloadFile(new ES3Settings(filePath, settings), user, password, 0);
 	}
 
+	/// <summary>Downloads a file from the server and saves it locally, overwriting any existing local file. An error is returned if the file does not exist.</summary>
+	/// <param name="es3File">The ES3File we want to load our data into. The filename in the settings of the ES3File will be used when downloading.</param>
+	public IEnumerator DownloadFile(ES3File es3File)
+	{
+		return DownloadFile(es3File, "", "", 0);
+	}
+
+	/// <summary>Downloads a file from the server and saves it locally, overwriting any existing local file. An error is returned if the file does not exist.</summary>
+	/// <param name="es3File">The ES3File we want to load our data into. The filename in the settings of the ES3File will be used when downloading.</param>
+	/// <param name="user">The unique name of the user this file belongs to, if the file isn't globally accessible.</param>
+	public IEnumerator DownloadFile(ES3File es3File, string user)
+	{
+		return DownloadFile(es3File, user, "", 0);
+	}
+
+	/// <summary>Downloads a file from the server and saves it locally, overwriting any existing local file. An error is returned if the file does not exist.</summary>
+	/// <param name="es3File">The ES3File we want to load our data into. The filename in the settings of the ES3File will be used when downloading.</param>
+	/// <param name="user">The unique name of the user this file belongs to, if the file isn't globally accessible.</param>
+	/// <param name="password">The password of the user this file belongs to.</param>
+	public IEnumerator DownloadFile(ES3File es3File, string user, string password)
+	{
+		return DownloadFile(es3File, user, password, 0);
+	}
+
+	private IEnumerator DownloadFile(ES3File es3File, string user, string password, long timestamp)
+	{
+		Reset();
+
+		var form = CreateWWWForm();
+		form.AddField("apiKey",  apiKey);
+		form.AddField("getFile", es3File.settings.path);
+		form.AddField("user", GetUser(user, password));
+		if(timestamp > 0)
+			form.AddField("timestamp", timestamp.ToString());
+
+		using(var webRequest = UnityWebRequest.Post(url, form))
+		{
+			yield return SendWebRequest(webRequest);
+
+			if(!HandleError(webRequest, false))
+			{
+				if(webRequest.downloadedBytes > 0)
+				{
+					es3File.Clear();
+					es3File.SaveRaw(webRequest.downloadHandler.data);
+				}
+				else
+				{
+					error = string.Format("File {0} was not found on the server.", es3File.settings.path);
+					errorCode = 3;
+				}
+			}
+		}
+
+		isDone = true;
+	}
+
 	private IEnumerator DownloadFile(ES3Settings settings, string user, string password, long timestamp)
 	{
 		Reset();
@@ -314,6 +418,12 @@ public class ES3Cloud : ES3WebClass
 	#endregion
 
 	#region DeleteFile
+
+	/// <summary>Deletes the default file from the server. An error is *not* returned if the file does not exist.</summary>
+	public IEnumerator DeleteFile()
+	{
+		return DeleteFile(new ES3Settings(), "", "");
+	}
 
 	/// <summary>Deletes a file from the server. An error is *not* returned if the file does not exist.</summary>
 	/// <param name="filePath">The relative or absolute path of the file we want to delete.</param>
@@ -386,6 +496,80 @@ public class ES3Cloud : ES3WebClass
 
 	#endregion
 
+	#region RenameFile
+
+	/// <summary>Renames a file from the server. An error is *not* returned if the file does not exist.</summary>
+	/// <param name="filePath">The relative or absolute path of the file we want to delete.</param>
+	public IEnumerator RenameFile(string filePath, string newFilePath)
+	{
+		return RenameFile(new ES3Settings(filePath), new ES3Settings(newFilePath), "", "");
+	}
+
+	/// <summary>Renames a file from the server. An error is *not* returned if the file does not exist.</summary>
+	/// <param name="filePath">The relative or absolute path of the file we want to delete.</param>
+	/// <param name="user">The unique name of the user this file belongs to, if the file isn't globally accessible.</param>
+	public IEnumerator RenameFile(string filePath, string newFilePath, string user)
+	{
+		return RenameFile(new ES3Settings(filePath), new ES3Settings(newFilePath), user, "");
+	}
+
+	/// <summary>Renames a file from the server. An error is *not* returned if the file does not exist.</summary>
+	/// <param name="filePath">The relative or absolute path of the file we want to delete.</param>
+	/// <param name="user">The unique name of the user this file belongs to, if the file isn't globally accessible.</param>
+	/// <param name="password">The password of the user this file belongs to.</param>
+	public IEnumerator RenameFile(string filePath, string newFilePath, string user, string password)
+	{
+		return RenameFile(new ES3Settings(filePath), new ES3Settings(newFilePath), user, password);
+	}
+
+	/// <summary>Renames a file from the server. An error is *not* returned if the file does not exist.</summary>
+	/// <param name="filePath">The relative or absolute path of the file we want to delete.</param>
+	/// <param name="settings">The settings we want to use to override the default settings.</param>
+	public IEnumerator RenameFile(string filePath, string newFilePath, ES3Settings settings)
+	{
+		return RenameFile(new ES3Settings(filePath, settings), new ES3Settings(newFilePath, settings), "", "");
+	}
+
+	/// <summary>Renames a file from the server. An error is *not* returned if the file does not exist.</summary>
+	/// <param name="filePath">The relative or absolute path of the file we want to delete.</param>
+	/// <param name="user">The unique name of the user this file belongs to, if the file isn't globally accessible.</param>
+	/// <param name="settings">The settings we want to use to override the default settings.</param>
+	public IEnumerator RenameFile(string filePath, string newFilePath, string user, ES3Settings settings)
+	{
+		return RenameFile(new ES3Settings(filePath, settings), new ES3Settings(newFilePath, settings), user, "");
+	}
+
+	/// <summary>Renames a file from the server. An error is *not* returned if the file does not exist.</summary>
+	/// <param name="filePath">The relative or absolute path of the file we want to delete.</param>
+	/// <param name="user">The unique name of the user this file belongs to, if the file isn't globally accessible.</param>
+	/// <param name="password">The password of the user this file belongs to.</param>
+	/// <param name="settings">The settings we want to use to override the default settings.</param>
+	public IEnumerator RenameFile(string filePath, string newFilePath, string user, string password, ES3Settings settings)
+	{
+		return RenameFile(new ES3Settings(filePath, settings), new ES3Settings(newFilePath, settings), user, password);
+	}
+
+	private IEnumerator RenameFile(ES3Settings settings, ES3Settings newSettings, string user, string password)
+	{
+		Reset();
+
+		var form = CreateWWWForm();
+		form.AddField("apiKey",  apiKey);
+		form.AddField("renameFile", settings.path);
+		form.AddField("newFilename", newSettings.path);
+		form.AddField("user", GetUser(user, password));
+
+		using(var webRequest = UnityWebRequest.Post(url, form))
+		{
+			yield return SendWebRequest(webRequest);
+			HandleError(webRequest, true);
+		}
+
+		isDone = true;
+	}
+
+	#endregion
+
 	#region DownloadFilenames
 
 	/// <summary>Downloads the names of all of the files on the server. Downloaded filenames are stored in the 'filenames' variable of the ES3Cloud object.</summary>
@@ -426,6 +610,12 @@ public class ES3Cloud : ES3WebClass
 	#endregion
 
 	#region DownloadTimestamp
+
+	/// <summary>Downloads the timestamp representing when the server file was last updated. The downloaded timestamp is stored in the 'timestamp' variable of the ES3Cloud object.</summary>
+	public IEnumerator DownloadTimestamp()
+	{
+		return DownloadTimestamp(new ES3Settings(), "", "");
+	}
 
 	/// <summary>Downloads the timestamp representing when the server file was last updated. The downloaded timestamp is stored in the 'timestamp' variable of the ES3Cloud object.</summary>
 	/// <param name="filePath">The relative or absolute path of the file we want to get the timestamp of.</param>

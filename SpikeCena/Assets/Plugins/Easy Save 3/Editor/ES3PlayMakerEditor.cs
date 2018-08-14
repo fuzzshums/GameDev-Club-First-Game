@@ -494,6 +494,17 @@ namespace ES3PlayMaker
 		}
 	}
 
+	[CustomActionEditor(typeof(ES3PlayMaker.ES3CloudDeleteFile))]
+	public class ES3CloudRenameFileEditor : ES3CloudUserEditor
+	{
+		protected override void DrawChildGUI()
+		{
+			EditField("path");
+			EditField("newFilename");
+			base.DrawChildGUI();
+		}
+	}
+
 	[CustomActionEditor(typeof(ES3PlayMaker.ES3CloudDownloadFilenames))]
 	public class ES3CloudDownloadFilenamesEditor : ES3CloudUserEditor
 	{
@@ -517,7 +528,4 @@ namespace ES3PlayMaker
 	#endif
 	#endregion
 }
-
-
-
 #endif

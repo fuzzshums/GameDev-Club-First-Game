@@ -234,7 +234,7 @@ public abstract class ES3Reader : System.IDisposable
 	public virtual T Read<T>(ES3Type type)
 	{
 		if(type == null)
-			throw new NotSupportedException("Type of "+type.type.ToString()+" is not currently supported, and could not be loaded using reflection.");
+			throw new NotSupportedException("Type of "+type+" is not currently supported, and could not be loaded using reflection.");
 		else if(type.isPrimitive)
 			return (T)type.Read<T>(this);
 		else if(type.isCollection)
@@ -249,7 +249,7 @@ public abstract class ES3Reader : System.IDisposable
 	public virtual void ReadInto<T>(object obj, ES3Type type)
 	{
 		if(type == null)
-			throw new NotSupportedException("Type of "+type.type.ToString()+" is not currently supported, and could not be loaded using reflection.");
+			throw new NotSupportedException("Type of "+type+" is not currently supported, and could not be loaded using reflection.");
 
 		else if(type.isCollection)
 			((ES3CollectionType)type).ReadInto(this, obj);

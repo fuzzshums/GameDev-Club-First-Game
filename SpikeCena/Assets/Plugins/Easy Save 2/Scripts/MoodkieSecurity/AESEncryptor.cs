@@ -37,8 +37,11 @@ namespace MoodkieSecurity
             fSalt = salt;
         }
 
-        private byte[] iEncrypt(byte[] data, byte[] key, byte[] iV)
+        private byte[] Encrypt(byte[] data, byte[] key, byte[] iV)
         {
+#if DISABLE_ENCRYPTION
+			return data;
+#else
             MemoryStream ms = new MemoryStream();
 
             RijndaelManaged alg = new RijndaelManaged();
@@ -50,29 +53,7 @@ namespace MoodkieSecurity
             cs.Dispose();
             byte[] encryptedData = ms.ToArray();
             return encryptedData;
-        }
-
-        /// <summary>
-        /// Encrypt string with AES algorith.
-        /// </summary>
-        /// <param name="data">String to encrypt.</param>
-        public string Encrypt(string data)
-        {
-            byte[] clearBytes = System.Text.Encoding.Unicode.GetBytes(data);
-
-            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(fPassword, fSalt, 50);
-            switch (fEncryptionBits)
-            {
-                case AESBits.BITS128:
-                    return Convert.ToBase64String(iEncrypt(clearBytes, pdb.GetBytes(16), pdb.GetBytes(16)));
-
-                case AESBits.BITS192:
-                    return Convert.ToBase64String(iEncrypt(clearBytes, pdb.GetBytes(24), pdb.GetBytes(16)));
-
-                case AESBits.BITS256:
-                    return Convert.ToBase64String(iEncrypt(clearBytes, pdb.GetBytes(32), pdb.GetBytes(16)));
-            }
-            return null;
+#endif
         }
 
         /// <summary>
@@ -85,19 +66,22 @@ namespace MoodkieSecurity
             switch (fEncryptionBits)
             {
                 case AESBits.BITS128:
-                    return iEncrypt(data, pdb.GetBytes(16), pdb.GetBytes(16));
+                    return Encrypt(data, pdb.GetBytes(16), pdb.GetBytes(16));
 
                 case AESBits.BITS192:
-                    return iEncrypt(data, pdb.GetBytes(24), pdb.GetBytes(16));
+                    return Encrypt(data, pdb.GetBytes(24), pdb.GetBytes(16));
 
                 case AESBits.BITS256:
-                    return iEncrypt(data, pdb.GetBytes(32), pdb.GetBytes(16));
+                    return Encrypt(data, pdb.GetBytes(32), pdb.GetBytes(16));
             }
             return null;
         }
 
-        private byte[] iDecrypt(byte[] data, byte[] key, byte[] iv)
+        private byte[] Decrypt(byte[] data, byte[] key, byte[] iv)
         {
+#if DISABLE_ENCRYPTION
+			return data;
+#else
             MemoryStream ms = new MemoryStream();
             //Aes alg = Aes.Create();
             RijndaelManaged alg = new RijndaelManaged();
@@ -108,35 +92,7 @@ namespace MoodkieSecurity
             cs.Dispose();
             byte[] decryptedData = ms.ToArray();
             return decryptedData;
-        }
-
-
-        /// <summary>
-        /// Decrypt string with AES algorithm.
-        /// </summary>
-        /// <param name="data">Encrypted string.</param>
-        public string Decrypt(string data)
-        {
-            byte[] dataToDecrypt = Convert.FromBase64String(data);
-
-            Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(fPassword,  fSalt, 50);
-			byte[] bytes;
-
-            switch (fEncryptionBits)
-            {
-                case AESBits.BITS128:
-					bytes = iDecrypt(dataToDecrypt, pdb.GetBytes(16), pdb.GetBytes(16));
-					return System.Text.Encoding.Unicode.GetString(bytes, 0, bytes.Length);
-
-                case AESBits.BITS192:
-					bytes = iDecrypt(dataToDecrypt, pdb.GetBytes(24), pdb.GetBytes(16));
-					return System.Text.Encoding.Unicode.GetString(bytes, 0, bytes.Length);
-
-                case AESBits.BITS256:
-					bytes = iDecrypt(dataToDecrypt, pdb.GetBytes(32), pdb.GetBytes(16));
-					return System.Text.Encoding.Unicode.GetString(bytes, 0, bytes.Length);
-            }
-            return null;
+#endif
         }
 
         /// <summary>
@@ -150,13 +106,13 @@ namespace MoodkieSecurity
             switch (fEncryptionBits)
             {
                 case AESBits.BITS128:
-                    return iDecrypt(data, pdb.GetBytes(16), pdb.GetBytes(16));
+                    return Decrypt(data, pdb.GetBytes(16), pdb.GetBytes(16));
 
                 case AESBits.BITS192:
-                    return iDecrypt(data, pdb.GetBytes(24), pdb.GetBytes(16));
+                    return Decrypt(data, pdb.GetBytes(24), pdb.GetBytes(16));
 
                 case AESBits.BITS256:
-                    return iDecrypt(data, pdb.GetBytes(32), pdb.GetBytes(16));
+                    return Decrypt(data, pdb.GetBytes(32), pdb.GetBytes(16));
             }
             return null;
         }
@@ -255,6 +211,9 @@ namespace MoodkieSecurity
 
         public byte[] iEncrypt(byte[] data)
         {
+#if DISABLE_ENCRYPTION
+			return data;
+#else
             IBuffer pwBuffer = CryptographicBuffer.ConvertStringToBinary(Password, BinaryStringEncoding.Utf8);
             IBuffer saltBuffer = CryptographicBuffer.CreateFromByteArray(Salt);
             IBuffer plainBuffer = CryptographicBuffer.CreateFromByteArray(data);
@@ -292,10 +251,14 @@ namespace MoodkieSecurity
             CryptographicBuffer.CopyToByteArray(resultBuffer, out result);
 
             return result;
+#endif
         }
 
         public byte[] iDecrypt(byte[] encryptedData)
         {
+#if DISABLE_ENCRYPTION
+			return encryptedData;
+#else
             IBuffer pwBuffer = CryptographicBuffer.ConvertStringToBinary(Password, BinaryStringEncoding.Utf8);
             IBuffer saltBuffer = CryptographicBuffer.CreateFromByteArray(Salt);
             IBuffer cipherBuffer = CryptographicBuffer.CreateFromByteArray(encryptedData);
@@ -333,6 +296,7 @@ namespace MoodkieSecurity
             CryptographicBuffer.CopyToByteArray(resultBuffer, out result);
 
             return result;
+	#endif
         }
 
         /// <summary>

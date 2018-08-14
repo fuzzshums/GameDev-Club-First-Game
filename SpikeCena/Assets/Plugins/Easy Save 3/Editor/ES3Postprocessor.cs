@@ -36,12 +36,17 @@ public class ES3Postprocessor : UnityEditor.AssetModificationProcessor
 		if(EditorApplication.isPlayingOrWillChangePlaymode && !EditorApplication.isPlaying)
 		{
 			var go = GameObject.Find("Easy Save 3 Manager");
-			if(go == null && !ES3EditorUtility.GetDefaultSettings().addMgrToSceneAutomatically)
+			var defaultSettings = ES3EditorUtility.GetDefaultSettings();
+			if(go == null && !defaultSettings.addMgrToSceneAutomatically)
 				return;
 
 			AddManagerToScene();
-			_refMgr.GenerateReferences();
-			_refMgr.GeneratePrefabReferences();
+
+			if(defaultSettings.autoUpdateReferences)
+			{
+				_refMgr.GenerateReferences();
+				_refMgr.GeneratePrefabReferences();
+			}
 			_autoSaveMgr.UpdateAutoSaves();
 
 			AssetDatabase.Refresh();

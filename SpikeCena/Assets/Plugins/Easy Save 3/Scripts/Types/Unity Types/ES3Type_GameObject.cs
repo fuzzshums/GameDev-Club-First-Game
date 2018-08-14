@@ -9,6 +9,7 @@ namespace ES3Types
 	public class ES3Type_GameObject : ES3Type
 	{
 		private const string prefabPropertyName = "es3Prefab";
+		private const string transformPropertyName = "transformID";
 		public static ES3Type Instance = null;
 
 		public ES3Type_GameObject() : base(typeof(UnityEngine.GameObject)){ Instance = this; }
@@ -29,7 +30,7 @@ namespace ES3Types
 				{
 					writer.WriteRef(instance);
 					// Write the ID of this Transform so we can assign it's ID when we load.
-					writer.WriteProperty("transformID", ES3ReferenceMgrBase.Current.Add(instance.transform));
+					writer.WriteProperty(transformPropertyName, ES3ReferenceMgrBase.Current.Add(instance.transform));
 				}
 			}
 
@@ -65,13 +66,19 @@ namespace ES3Types
 			// Read the intial properties regarding the instance we're loading.
 			while(true)
 			{
+				var refMgr = ES3ReferenceMgrBase.Current;
+				if(refMgr == null)
+				{
+					reader.Skip();
+					continue;
+				}
+
 				var propertyName = ReadPropertyName(reader);
 				if(propertyName == ES3Type.typeFieldName)
 					return ES3TypeMgr.GetOrCreateES3Type(reader.ReadType()).Read<T>(reader);
 				
 				else if(propertyName == ES3ReferenceMgrBase.referencePropertyName)
 				{
-					var refMgr = ES3ReferenceMgrBase.Current;
 					if(refMgr == null)
 					{
 						reader.Skip();
@@ -89,9 +96,18 @@ namespace ES3Types
 					}
 					else if(!ES3Reflection.IsAssignableFrom(typeof(T), obj.GetType()))
 						throw new MissingReferenceException("The instance with ID \""+id+"\" is a different type than expected. Expected \""+typeof(T)+"\", found \""+obj.GetType()+"\"");
-				
+				}
+
+				else if (propertyName == transformPropertyName)
+				{
+					if(refMgr == null)
+					{
+						reader.Skip();
+						continue;
+					}
+
 					// Now load the Transform's ID and assign it to the Transform of our object.
-					long transformID = reader.ReadProperty<long>(ES3Type_long.Instance);
+					long transformID = reader.Read<long>(ES3Type_long.Instance);
 					refMgr.Add(((GameObject)obj).transform, transformID);
 				}
 

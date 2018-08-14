@@ -28,7 +28,7 @@ namespace ES3Types
 	{
 		public static ES3Type Instance;
 
-		public ES3Type_StringArray() : base(typeof(Quaternion[]), ES3Type_Quaternion.Instance)
+		public ES3Type_StringArray() : base(typeof(string[]), ES3Type_string.Instance)
 		{
 			Instance = this;
 		}

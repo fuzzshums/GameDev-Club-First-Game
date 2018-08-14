@@ -128,8 +128,7 @@ public static class ES3
 	public static void SaveRaw(string str, ES3Settings settings)
 	{
 		var bytes = settings.encoding.GetBytes(str);
-		using(var stream = ES3Stream.CreateStream(settings, ES3FileMode.Write))
-			stream.Write(bytes, 0, bytes.Length);
+		SaveRaw(bytes, settings);
 	}
 
 	/// <summary>Creates or appends the specified bytes to a file.</summary>
@@ -357,9 +356,14 @@ public static class ES3
 
 	#region Other ES3.Load Methods
 
+	/// <summary>Loads the default file as a byte array.</summary>
+	public static byte[] LoadRawBytes()
+	{
+		return LoadRawBytes(new ES3Settings());
+	}
+
 	/// <summary>Loads a file as a byte array.</summary>
 	/// <param name="filePath">The relative or absolute path of the file we want to load as a byte array.</param>
-	/// <param name="settings">The settings we want to use to override the default settings.</param>
 	public static byte[] LoadRawBytes(string filePath)
 	{
 		return LoadRawBytes(new ES3Settings(filePath));
@@ -377,7 +381,14 @@ public static class ES3
 	/// <param name="settings">The settings we want to use to override the default settings.</param>
 	public static byte[] LoadRawBytes(ES3Settings settings)
 	{
-		if(settings.location == Location.File)
+		using (var stream = ES3Stream.CreateStream(settings, ES3FileMode.Read))
+		{
+			var bytes = new byte[stream.Length];
+			stream.Read(bytes, 0, bytes.Length);
+			return bytes;
+		}
+
+		/*if(settings.location == Location.File)
 			return ES3IO.ReadAllBytes(settings.FullPath);
 		else if(settings.location == Location.PlayerPrefs)
 			return System.Convert.FromBase64String(PlayerPrefs.GetString(settings.FullPath));
@@ -386,7 +397,13 @@ public static class ES3
 			var textAsset = Resources.Load<TextAsset>(settings.FullPath);
 			return textAsset.bytes;
 		}
-		return null;
+		return null;*/
+	}
+
+	/// <summary>Loads the default file as a byte array.</summary>
+	public static string LoadRawString()
+	{
+		return LoadRawString(new ES3Settings());
 	}
 
 	/// <summary>Loads a file as a byte array.</summary>
@@ -473,12 +490,16 @@ public static class ES3
 
 		var newSettings = new ES3Settings(audioFilePath, settings);
 
+		#if UNITY_2017_1_OR_NEWER
+		WWW www = new WWW(newSettings.FullPath);
+		#else
 		WWW www = new WWW("file://"+newSettings.FullPath);
+		#endif
 		while(!www.isDone)
 		{
 			// Wait for it to load.
 		}
-
+        Debug.Log("MY PATH = " + newSettings.FullPath);
 		if(!string.IsNullOrEmpty(www.error))
 			throw new System.Exception(www.error);
 
@@ -494,6 +515,12 @@ public static class ES3
 	#endregion
 
 	#region Other ES3 Methods
+
+	/// <summary>Deletes the default file.</summary>
+	public static void DeleteFile()
+	{
+		DeleteFile(new ES3Settings());
+	}
 
 	/// <summary>Deletes the file at the given path using the default settings.</summary>
 	/// <param name="filePath">The relative or absolute path of the file we wish to delete.</param>
@@ -657,10 +684,13 @@ public static class ES3
 		if(settings.location == Location.Resources)
 			throw new System.NotSupportedException("Modifying files in Resources is not allowed.");
 
-		using(var writer = ES3Writer.Create(settings))
-		{
-			writer.MarkKeyForDeletion(key);
-			writer.Save();
+		if(ES3.FileExists(settings))
+		{	
+			using (var writer = ES3Writer.Create(settings))
+			{
+				writer.MarkKeyForDeletion(key);
+				writer.Save();
+			}
 		}
 	}
 
@@ -705,6 +735,14 @@ public static class ES3
 		}
 	}
 
+	/// <summary>Checks whether the default file exists.</summary>
+	/// <param name="filePath">The relative or absolute path of the file we want to check the existence of.</param>
+	/// <returns>True if the file exists, otherwise False.</returns>
+	public static bool FileExists()
+	{
+		return FileExists(new ES3Settings());
+	}
+
 	/// <summary>Checks whether a file exists.</summary>
 	/// <param name="filePath">The relative or absolute path of the file we want to check the existence of.</param>
 	/// <returns>True if the file exists, otherwise False.</returns>
@@ -736,7 +774,7 @@ public static class ES3
 		return false;
 	}
 
-	/// <summary>Checks whether a file exists.</summary>
+	/// <summary>Checks whether a folder exists.</summary>
 	/// <param name="folderPath">The relative or absolute path of the folder we want to check the existence of.</param>
 	/// <returns>True if the folder exists, otherwise False.</returns>
 	public static bool DirectoryExists(string folderPath)
@@ -823,7 +861,7 @@ public static class ES3
 	/// <param name="settings">The settings we want to use to override the default settings.</param>
 	public static string[] GetFiles(string directoryPath, ES3Settings settings)
 	{
-		return GetKeys(new ES3Settings(directoryPath, settings));
+		return GetFiles(new ES3Settings(directoryPath, settings));
 	}
 
 	/// <summary>Gets an array of all of the file names in a directory.</summary>

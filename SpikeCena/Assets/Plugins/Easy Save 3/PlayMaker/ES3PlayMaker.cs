@@ -156,6 +156,7 @@ namespace ES3PlayMaker
 		[Tooltip("The unique key we want to use to identity the data we are saving.")]
 		public FsmString key;
 		[Tooltip("The value we want to save.")]
+		[UIHint(UIHint.Variable)]
 		public FsmVar value;
 
 		public override void OnReset()
@@ -252,8 +253,10 @@ namespace ES3PlayMaker
 		[Tooltip("The unique key which identifies the data we're loading.")]
 		public FsmString key;
 		[Tooltip("The variable we want to use to store our loaded data.")]
+		[UIHint(UIHint.Variable)]
 		public FsmVar value;
 		[Tooltip("Optional: A value to return if the key does not exist.")]
+		[UIHint(UIHint.Variable)]
 		public FsmVar defaultValue;
 
 		public override void OnReset()
@@ -281,6 +284,7 @@ namespace ES3PlayMaker
 		public FsmString key;
 		[Tooltip("The object we want to load our data into.")]
 		[RequiredField]
+		[UIHint(UIHint.Variable)]
 		public FsmVar value;
 
 		public override void OnReset()
@@ -640,7 +644,7 @@ namespace ES3PlayMaker
 	}
 
 	[ActionCategory("Easy Save 3")]
-	[Tooltip("Gets an array of key names from a file.")]
+	[Tooltip("Gets how many keys are in a file.")]
 	public class GetKeyCount : SettingsAction
 	{
 		[Tooltip("The relative or absolute path of the file we want to count the keys of.")]
@@ -759,6 +763,7 @@ namespace ES3PlayMaker
 		[Tooltip("The unique key we want to use to identity the data we are saving.")]
 		public FsmString key;
 		[Tooltip("The value we want to save.")]
+		[UIHint(UIHint.Variable)]
 		public FsmVar value;
 
 		public override void OnReset()
@@ -781,8 +786,10 @@ namespace ES3PlayMaker
 		[Tooltip("The unique key which identifies the data we're loading.")]
 		public FsmString key;
 		[Tooltip("The variable we want to use to store our loaded data.")]
+		[UIHint(UIHint.Variable)]
 		public FsmVar value;
 		[Tooltip("Optional: A value to return if the key does not exist.")]
+		[UIHint(UIHint.Variable)]
 		public FsmVar defaultValue;
 
 		public override void OnReset()
@@ -809,6 +816,7 @@ namespace ES3PlayMaker
 		[Tooltip("The unique key which identifies the data we're loading.")]
 		public FsmString key;
 		[Tooltip("The variable we want to load our data into.")]
+		[UIHint(UIHint.Variable)]
 		public FsmVar value;
 
 		public override void OnReset()
@@ -952,7 +960,7 @@ namespace ES3PlayMaker
 
 	#region ES3Cloud Actions
 
-	#if !DISABLE_WEB
+#if !DISABLE_WEB
 	public abstract class ES3CloudAction : SettingsAction
 	{
 		[Tooltip("The URL to the ES3Cloud.php file on your server.")]
@@ -1023,7 +1031,7 @@ namespace ES3PlayMaker
 		public override void Enter()
 		{
 			var settings = GetSettings();
-			StartCoroutine(cloud.Sync(settings.path, user.Value, password.Value, settings));
+			StartCoroutine(cloud.Sync(path.Value, user.Value, password.Value, settings));
 		}
 	}
 
@@ -1035,7 +1043,7 @@ namespace ES3PlayMaker
 		{
 			base.Enter();
 			var settings = GetSettings();
-			StartCoroutine(cloud.Sync(settings.path, settings));
+			StartCoroutine(cloud.Sync(path.Value, settings));
 		}
 	}
 
@@ -1047,7 +1055,7 @@ namespace ES3PlayMaker
 		{
 			base.Enter();
 			var settings = GetSettings();
-			StartCoroutine(cloud.UploadFile(settings.path, user.Value, password.Value, settings));
+			StartCoroutine(cloud.UploadFile(path.Value, user.Value, password.Value, settings));
 		}
 	}
 
@@ -1059,7 +1067,7 @@ namespace ES3PlayMaker
 		{
 			base.Enter();
 			var settings = GetSettings();
-			StartCoroutine(cloud.DownloadFile(settings.path, user.Value, password.Value, settings));
+			StartCoroutine(cloud.DownloadFile(path.Value, user.Value, password.Value, settings));
 		}
 	}
 
@@ -1071,7 +1079,22 @@ namespace ES3PlayMaker
 		{
 			base.Enter();
 			var settings = GetSettings();
-			StartCoroutine(cloud.DeleteFile(settings.path, user.Value, password.Value, settings));
+			StartCoroutine(cloud.DeleteFile(path.Value, user.Value, password.Value, settings));
+		}
+	}
+
+	[ActionCategory("Easy Save 3")]
+	[Tooltip("Renames a file on the server, overwriting any existing files, or returning error code 3 if no file exists on the server.")]
+	public class ES3CloudRenameFile : ES3CloudUserAction
+	{
+		[Tooltip("The name we want to rename the file to.")]
+		public FsmString newFilename;
+
+		public override void Enter()
+		{
+			base.Enter();
+			var settings = GetSettings();
+			StartCoroutine(cloud.RenameFile(path.Value, newFilename.Value, user.Value, password.Value, settings));
 		}
 	}
 
@@ -1128,7 +1151,7 @@ namespace ES3PlayMaker
 		}
 	}
 
-	#endif
+#endif
 	#endregion
 }
 

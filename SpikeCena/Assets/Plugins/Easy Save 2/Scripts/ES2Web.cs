@@ -565,7 +565,7 @@ public class ES2Web
 	
 	private static string StringToMD5(string str)
 	{
-		MD5Encryptor encryptor = new MD5Encryptor();
+		var encryptor = new MD5Encryptor();
 		return encryptor.GetMD5(str).Replace("-", "").ToLower();
 	}
 }

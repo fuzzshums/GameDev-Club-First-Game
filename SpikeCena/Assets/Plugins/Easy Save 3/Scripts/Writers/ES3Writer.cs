@@ -84,7 +84,7 @@ public abstract class ES3Writer : IDisposable
 		StartWriteProperty(key);
 		StartWriteObject(null);
 		WriteType(typeof(T));
-		WriteProperty("value", value, ES3TypeMgr.GetOrCreateES3Type(typeof(T)));
+		WriteProperty("value", value, ES3TypeMgr.GetOrCreateES3Type(typeof(T)), settings.referenceMode);
 		EndWriteObject(null);
 		MarkKeyForDeletion(key);
 	}
@@ -96,6 +96,21 @@ public abstract class ES3Writer : IDisposable
 		WriteType(type);
 		WriteRawProperty("value", value);
 		EndWriteObject(null);
+	}
+
+	/// <summary>Writes a value to the writer with the given key, using the given type rather than the generic parameter.</summary>
+	/// <param name="type">The type we want to use for the header, and to retrieve an ES3Type.</param>
+	/// <param name="key">The key which uniquely identifies this value.</param>
+	/// <param name="value">The value we want to write.</param>
+	[System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
+	public virtual void Write(Type type, string key, object value)
+	{ 
+		StartWriteProperty(key);
+		StartWriteObject(null);
+		WriteType(type);
+		WriteProperty("value", value, ES3TypeMgr.GetOrCreateES3Type(type), settings.referenceMode);
+		EndWriteObject(null);
+		MarkKeyForDeletion(key);
 	}
 
 	#endregion
@@ -309,6 +324,12 @@ public abstract class ES3Writer : IDisposable
 
 	internal static ES3Writer Create(Stream stream, ES3Settings settings, bool writeHeaderAndFooter, bool overwriteKeys)
 	{
+		if(stream.GetType() == typeof(MemoryStream))
+		{
+			settings = (ES3Settings)settings.Clone();
+			settings.location = ES3.Location.Memory;
+		}
+
 		// Get the baseWriter using the given Stream.
 		if(settings.format == ES3.Format.JSON)
 			return new ES3JSONWriter(stream, settings, writeHeaderAndFooter, overwriteKeys);

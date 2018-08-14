@@ -60,13 +60,16 @@ namespace ES3Types
 
 		protected override object ReadUnityObject<T>(ES3Reader reader)
 		{
-			var instance = new Texture2D(reader.ReadProperty<int>(ES3Type_int.Instance),reader.ReadProperty<int>(ES3Type_int.Instance),reader.ReadProperty<TextureFormat>(), (reader.ReadProperty<int>(ES3Type_int.Instance) > 1));
+			var instance = new Texture2D(	reader.Read<int>(ES3Type_int.Instance), // Property name has already been read in ES3UnityObjectType, so we only need to read the value.
+											reader.ReadProperty<int>(ES3Type_int.Instance),
+											reader.ReadProperty<TextureFormat>(), 
+											(reader.ReadProperty<int>(ES3Type_int.Instance) > 1));
 			ReadObject<T>(reader, instance);
 			return instance;
 		}
 	}
 
-		public class ES3Type_Texture2DArray : ES3ArrayType
+	public class ES3Type_Texture2DArray : ES3ArrayType
 	{
 		public static ES3Type Instance;
 

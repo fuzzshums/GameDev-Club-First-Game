@@ -119,7 +119,7 @@ public class ES2EditorAutoSaveUtility
 
 		for(int i=0; i<Selection.gameObjects.Length; i++)
 		{
-			if(PrefabUtility.GetPrefabParent(Selection.gameObjects[i]) != null || PrefabUtility.GetPrefabObject(Selection.gameObjects[i]) == null)
+			if(PrefabUtility.GetCorrespondingObjectFromSource(Selection.gameObjects[i]) != null || PrefabUtility.GetPrefabObject(Selection.gameObjects[i]) == null)
 				return false;
 		}
 

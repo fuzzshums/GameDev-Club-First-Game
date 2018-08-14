@@ -81,12 +81,12 @@ public struct ES2FilenameData
 		extension = Path.GetExtension(split[0]);
 
 		// Some platforms just use the filename
-		if(!IsURL() &&
+		/*if(!IsURL() &&
 			(Application.platform == RuntimePlatform.WSAPlayerARM ||
 		   Application.platform == RuntimePlatform.WSAPlayerX64 ||
 		   Application.platform == RuntimePlatform.WSAPlayerX86))
 			filePath = filename+extension;
-		else if(isAbsolute || IsURL())
+		else */if(isAbsolute || IsURL())
 			filePath = split[0];
 		// If user hasn't specified a save folder, don't try to include a save folder.
 		else if(userFolder != "")
@@ -322,10 +322,10 @@ public struct ES2FilenameData
 	public static string GetPersistentPath()
 	{
 		// Platforms which do not allow for absolute paths.
-		if(Application.platform == RuntimePlatform.WSAPlayerARM ||
+		/*if(Application.platform == RuntimePlatform.WSAPlayerARM ||
 		   Application.platform == RuntimePlatform.WSAPlayerX64 ||
 		   Application.platform == RuntimePlatform.WSAPlayerX86)
-			return "";
+			return "";*/
 
 		if(ES2GlobalSettings.defaultPCDataPath != "" && (Application.platform == RuntimePlatform.WindowsPlayer ||
 		                                                 Application.platform == RuntimePlatform.WindowsEditor))

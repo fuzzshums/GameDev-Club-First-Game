@@ -16,7 +16,7 @@ namespace ES3Editor
 
 			if(PrefabUtility.GetPrefabType(go) != PrefabType.Prefab)
 			{
-				go = (GameObject)PrefabUtility.GetPrefabParent(go);
+				go = (GameObject)PrefabUtility.GetCorrespondingObjectFromSource(go);
 				if(go == null)
 					return;
 			}

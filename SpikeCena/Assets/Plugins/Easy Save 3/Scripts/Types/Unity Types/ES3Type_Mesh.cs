@@ -16,11 +16,15 @@ namespace ES3Types
 		protected override void WriteUnityObject(object obj, ES3Writer writer)
 		{
 			var instance = (UnityEngine.Mesh)obj;
-			
+
+			#if UNITY_2017_3
+			writer.WriteProperty("indexFormat", instance.indexFormat);
+			#endif
+			writer.WriteProperty("vertices", instance.vertices, ES3Type_Vector3Array.Instance);
+			writer.WriteProperty("triangles", instance.triangles, ES3Type_intArray.Instance);
 			writer.WriteProperty("bounds", instance.bounds, ES3Type_Bounds.Instance);
 			writer.WriteProperty("boneWeights", instance.boneWeights, ES3Type_BoneWeightArray.Instance);
 			writer.WriteProperty("bindposes", instance.bindposes, ES3Type_Matrix4x4Array.Instance);
-			writer.WriteProperty("vertices", instance.vertices, ES3Type_Vector3Array.Instance);
 			writer.WriteProperty("normals", instance.normals, ES3Type_Vector3Array.Instance);
 			writer.WriteProperty("tangents", instance.tangents, ES3Type_Vector4Array.Instance);
 			writer.WriteProperty("uv", instance.uv, ES3Type_Vector2Array.Instance);
@@ -28,7 +32,6 @@ namespace ES3Types
 			writer.WriteProperty("uv3", instance.uv3, ES3Type_Vector2Array.Instance);
 			writer.WriteProperty("uv4", instance.uv4, ES3Type_Vector2Array.Instance);
 			writer.WriteProperty("colors32", instance.colors32, ES3Type_Color32Array.Instance);
-			writer.WriteProperty("triangles", instance.triangles, ES3Type_intArray.Instance);
 			writer.WriteProperty("subMeshCount", instance.subMeshCount, ES3Type_int.Instance);
 			for(int i=0; i<instance.subMeshCount; i++)
 				writer.WriteProperty("subMesh"+i, instance.GetTriangles(i), ES3Type_intArray.Instance);
@@ -49,7 +52,11 @@ namespace ES3Types
 			{
 				switch(propertyName)
 				{
-					
+					#if UNITY_2017_3
+					case "indexFormat":
+						instance.indexFormat = reader.Read<UnityEngine.Rendering.IndexFormat>();
+						break;
+					#endif
 					case "bounds":
 						instance.bounds = reader.Read<UnityEngine.Bounds>(ES3Type_Bounds.Instance);
 						break;

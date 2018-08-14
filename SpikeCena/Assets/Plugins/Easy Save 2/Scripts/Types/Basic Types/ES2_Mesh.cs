@@ -14,6 +14,9 @@ public sealed class ES2_Mesh : ES2Type
 		Mesh param = (Mesh)data;
 		writer.writer.Write(writer.settings.MeshSettingsToByteArray());
 
+		#if UNITY_2017_3
+		writer.writer.Write((int)param.indexFormat);
+		#endif
 		writer.Write(param.vertices);
 		writer.Write(param.triangles);
 
@@ -56,6 +59,9 @@ public sealed class ES2_Mesh : ES2Type
 	{
 		Mesh mesh = (Mesh)obj;
 		reader.settings.MeshSettingsFromByteArray(reader.ReadMeshSettings());
+		#if UNITY_2017_3
+		mesh.indexFormat = (UnityEngine.Rendering.IndexFormat)reader.reader.ReadInt32();
+		#endif
 		mesh.vertices = reader.ReadArray<Vector3>(new ES2_Vector3());
 		mesh.triangles = reader.ReadArray<int>(new ES2_int());
 

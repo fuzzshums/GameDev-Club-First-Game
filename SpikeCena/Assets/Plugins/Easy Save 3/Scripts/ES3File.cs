@@ -64,38 +64,19 @@ public class ES3File
 			}
 		}
 	}
-
+		
 	/// <summary>Creates a new ES3File and loads the specified file into the ES3File if there is data to load.</summary>
 	/// <param name="bytes">The bytes representing our file.</param>
-	/// <param name="settings">The settings we want to use to override the default settings.</param>
-	public ES3File(byte[] bytes, ES3Settings settings) : this(bytes, settings, true){}
-
-	/// <summary>Creates a new ES3File and loads the specified file into the ES3File if there is data to load.</summary>
-	/// <param name="bytes">The bytes representing our file.</param>
-	public ES3File(byte[] bytes) : this(bytes, new ES3Settings(), true){}
+	public ES3File(byte[] bytes) : this(bytes, new ES3Settings()){}
 
 	/// <summary>Creates a new ES3File and loads the bytes into the ES3File. Note the bytes must represent that of a file.</summary>
 	/// <param name="bytes">The bytes representing our file.</param>
 	/// <param name="settings">The settings we want to use to override the default settings.</param>
 	/// <param name="syncWithFile">Whether we should sync this ES3File with the one in storage immediately after creating it.</param>
-	public ES3File(byte[] bytes, ES3Settings settings, bool syncWithFile)
+	public ES3File(byte[] bytes, ES3Settings settings)
 	{
 		this.settings = settings;
-		this.syncWithFile = syncWithFile;
-		if(syncWithFile)
-		{
-			// Type checking must be enabled when syncing.
-			var settingsWithTypeChecking = (ES3Settings)settings.Clone();
-			settingsWithTypeChecking.typeChecking = true;
-
-			using(var reader = ES3Reader.Create(bytes, settingsWithTypeChecking))
-			{
-				if(reader == null)
-					return;
-				foreach (KeyValuePair<string,ES3Data> kvp in reader.RawEnumerator)
-					cache [kvp.Key] = kvp.Value;
-			}
-		}
+		SaveRaw(bytes, settings);
 	}
 	
 	/// <summary>Synchronises this ES3File with a file in storage.</summary>
@@ -172,9 +153,34 @@ public class ES3File
 			var es3Type = ES3TypeMgr.GetOrCreateES3Type(typeof(T));
 			
 			using (var baseWriter = ES3Writer.Create(stream, unencryptedSettings, false, false))
-				baseWriter.Write(value, es3Type);
+				baseWriter.Write(value, es3Type, settings.referenceMode);
 			
 			cache[key] = new ES3Data(es3Type, stream.ToArray());
+		}
+	}
+
+	/// <summary>Merges the data specified by the bytes parameter into this ES3File.</summary>
+	/// <param name="bytes">The bytes we want to merge with this ES3File.</param>
+	public void SaveRaw(byte[] bytes)
+	{
+		SaveRaw(bytes, settings);
+	}
+
+	/// <summary>Merges the data specified by the bytes parameter into this ES3File.</summary>
+	/// <param name="bytes">The bytes we want to merge with this ES3File.</param>
+	/// <param name="settings">The settings we want to use to override the default settings.</param>
+	public void SaveRaw(byte[] bytes, ES3Settings settings)
+	{
+		// Type checking must be enabled when syncing.
+		var settingsWithTypeChecking = (ES3Settings)settings.Clone();
+		settingsWithTypeChecking.typeChecking = true;
+
+		using(var reader = ES3Reader.Create(bytes, settingsWithTypeChecking))
+		{
+			if(reader == null)
+				return;
+			foreach (KeyValuePair<string,ES3Data> kvp in reader.RawEnumerator)
+				cache [kvp.Key] = kvp.Value;
 		}
 	}
 	
@@ -245,10 +251,12 @@ public class ES3File
 	{
 		if(cache.Count == 0)
 			return new byte[0];
-		
+
 		using (var ms = new System.IO.MemoryStream ())
 		{
-			using (var baseWriter = ES3Writer.Create(ms, settings, false, false))
+			var memorySettings = (ES3Settings)settings.Clone();
+			memorySettings.location = ES3.Location.Memory;
+			using (var baseWriter = ES3Writer.Create(ms, memorySettings, true, false))
 			{
 				foreach (var kvp in cache)
 					baseWriter.Write(kvp.Key, kvp.Value.type.type, kvp.Value.bytes);
@@ -292,6 +300,15 @@ public class ES3File
 		foreach(var kvp in cache)
 			size += kvp.Value.bytes.Length;
 		return size;
+	}
+
+	public Type GetKeyType(string key)
+	{
+		ES3Data es3data;
+		if(!cache.TryGetValue(key, out es3data))
+			throw new KeyNotFoundException("Key \"" + key + "\" was not found in this ES3File. Use Load<T>(key, defaultValue) if you want to return a default value if the key does not exist.");
+		
+		return es3data.type.type;
 	}
 	
 	#endregion
